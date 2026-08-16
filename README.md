@@ -1,1 +1,1 @@
-# Compositional-Learning-and-Wake-Sleep-Training-of-Neural-Networks
+# (IPre) Compositional Learning and Wake-Sleep Training of Neural Networks
