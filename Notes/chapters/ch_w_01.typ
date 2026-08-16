@@ -46,7 +46,11 @@ ${rho.alt_x_i}$
 
 
 === Weight Decay
+
 === Hinton & van Camp
+
 === Optimal Brain Surgeon / Damage (OBS / OBD)
+
 === Algoritmo de Gibbs
+
 === Distancia de Kullback-Leibler

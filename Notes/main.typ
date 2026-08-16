@@ -33,8 +33,6 @@
 = Semana 1
 #include "chapters/ch_w_01.typ"
 
-#pagebreak()
-#include "chapters/ch_template_informe.typ"
 
 //#pagebreak()
 //= Referencias
