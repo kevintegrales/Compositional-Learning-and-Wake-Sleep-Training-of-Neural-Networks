@@ -1,0 +1,374 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage{geometry}
+\geometry{margin=2.5cm,top=2.5cm,bottom=2.5cm}
+\usepackage{amsmath,amsfonts,amssymb,amsopn}
+\usepackage{booktabs,longtable,array}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{setspace}
+\usepackage{microtype}
+
+\definecolor{azul}{RGB}{30,60,120}
+\definecolor{grisclaro}{RGB}{245,245,250}
+\definecolor{verdecorado}{RGB}{60,120,90}
+\definecolor{naranja}{RGB}{220,120,30}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textcolor{grisclaro}{Flat Minima — Apuntes pedagógicos}}
+\fancyhead[R]{\small\textcolor{grisclaro}{Neural Computation 1997}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\newcounter{definicion}
+\newenvironment{definicion}[1][]{%
+  \refstepcounter{definicion}%
+  \begin{tcolorbox}[colback=grisclaro,colframe=verdecorado,title=Definición \thedefinicion: #1,breakable]}%
+  {\end{tcolorbox}}
+
+\newcounter{ejemplo}
+\newenvironment{ejemplo}[1][]{%
+  \refstepcounter{ejemplo}%
+  \begin{tcolorbox}[colback=grisclaro,colframe=naranja,title=Ejemplo intuitivo \theejemplo: #1,breakable]}%
+  {\end{tcolorbox}}
+
+\newcounter{notatecnica}
+\newenvironment{notatecnica}[1][]{%
+  \refstepcounter{notatecnica}%
+  \begin{tcolorbox}[colback=white,colframe=azul,title=Nota técnica \thenotatecnica: #1,breakable]}%
+  {\end{tcolorbox}}
+
+\title{\vspace{-2cm}\textbf{\huge Flat Minima}\\[0.5cm] \LARGE Apuntes pedagógicos del artículo\\[0.4cm] \large Hochreiter \& Schmidhuber (1997) \normalsize\textit{Neural Computation} 9(1):1--42\\[0.6cm] \normalsize \textbf{IPRE — Aprendizaje Composicional} \textbar\ Semestre 8 \textbar\ 2026-2}
+\author{\textit{Explicación paso a paso para principiantes: definiciones, analogías y contexto matemático simplificado}}
+\date{Agosto 2026}
+
+\begin{document}
+
+\begin{titlepage}
+\centering
+\vspace*{0.5cm}
+{\color{azul}\rule{16cm}{2pt}}\\[1.5cm]
+{\Huge\bfseries\color{azul} Flat Minima\\[0.3cm]}
+{\LARGE Una lectura guiada del artículo clásico\\[0.2cm] de Hochreiter \& Schmidhuber (1997)\\[0.6cm]
+\large \textsc{Neural Computation} \textbf{9(1): 1--42}}\\[1.2cm]
+{\large\itshape ``Un mínimo plano es una región amplia en el espacio de pesos\\ donde muchas configuraciones llevan al mismo error pequeño.''}\\[2cm]
+\begin{tcolorbox}[colback=grisclaro,colframe=azul,width=14cm,arc=4mm]
+\textbf{Enfoque pedagógico:}\vspace{0.2cm}\newline
+Este apunte explica cada sección con lenguaje accesible. Cada concepto técnico complejo tiene una \textbf{definición} formal, un \textbf{ejemplo intuitivo} y una \textbf{nota técnica} breve. Pensado para estudiantes que se acercan por primera vez a la teoría de la generalización en redes neuronales.
+\end{tcolorbox}\\[2cm]
+{\small Autor del apunte: Estudiante de IPRE (2026-2) \\ Fuente: \texttt{FlatMinima1997.pdf}}\\[0.5cm]
+{\tiny\color{black!40} Documento elaborado para uso académico personal}
+\vfill
+{\color{grisclaro}\rule{16cm}{0.4pt}}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+% ============================================================
+\section*{Cómo leer este apunte}
+\addcontentsline{toc}{section}{Cómo leer este apunte}
+
+Este documento acompaña la lectura del artículo original. Se recomienda tener a mano el PDF mientras se lee. Cada sección del apunte corresponde a una sección del artículo. Hay tres tipos de recuadros:
+
+\begin{definicion}[Ejemplo de uso]
+Un recuadro \textbf{Definición} explica un concepto técnico con palabras simples y luego con la notación matemática del artículo.
+\end{definicion}
+
+\begin{ejemplo}[Ejemplo de uso]
+Un recuadro \textbf{Ejemplo intuitivo} ofrece una analogía o un caso concreto que no requiere saber matemáticas para entender la idea.
+\end{ejemplo}
+
+\begin{notatecnica}[Nota técnica]
+Un recuadro \textbf{Nota técnica} profundiza para quienes ya dominan algo del tema o quieren ver la conexión matemática precisa con el artículo original.
+\end{notatecnica}
+
+\newpage
+
+% ============================================================
+\section{La idea central: ¿qué son los mínimos planos?}
+\label{sec:idea}
+
+\subsection{El problema: entrenar una red neuronal}
+
+Cuando entrenamos una red neuronal, tenemos datos de ejemplo $(x_p, y_p)$: una entrada $x_p$ y una salida deseada $y_p$. La red tiene \textbf{pesos} $w$ (números que conectan las unidades entre sí). El objetivo del entrenamiento es ajustar los pesos para que la red cometa poco error con los datos.
+
+\begin{definicion}[Pesos ($w$) y espacio de pesos ($W$)]
+Los \textbf{pesos} son los parámetros que la red aprende. Si la red tiene $L$ conexiones, entonces $w = (w_1, w_2, \dots, w_L)$ es un vector con $L$ números. El \textbf{espacio de pesos} $W \subset \mathbb{R}^L$ es el ``mapa'' donde cada punto representa una red posible.
+\end{definicion}
+
+\subsection{Mínimos: puntos de bajo error}
+
+Imagina que dibujamos el error de la red como una montaña: el eje $x$ y $y$ son los pesos, y la altura es cuánto se equivoca la red. Queremos llegar al fondo del valle: un punto donde el error es mínimo. Eso es un \textbf{mínimo} de la función de error.
+
+\begin{ejemplo}[Mínimo agudo vs. mínimo plano]
+\textbf{Mínimo agudo} (sharp): es como el fondo de un pozo estrecho y profundo. Si te mueves un poco en cualquier dirección, subes mucho (el error aumenta rápido). Eso significa que los pesos deben ser muy precisos.\\
+\textbf{Mínimo plano} (flat): es como un valle ancho y poco profundo. Puedes moverte bastante en varias direcciones sin subir mucho (el error se mantiene bajo). Eso significa que los pesos pueden ser imprecisos.
+\end{ejemplo}
+
+\subsection{¿Por qué los mínimos planos son mejores?}
+
+El artículo argumenta con la teoría \textbf{MDL (Minimum Description Length)}: un modelo simple es aquel que se puede describir con pocos bits. Un mínimo plano permite describir los pesos con menor precisión (menos bits), porque pequeños cambios no alteran la función. Por tanto, los mínimos planos corresponden a redes ``simples'' que generalizan mejor.
+
+\begin{notatecnica}[Conexión con MDL y la teoría de la información]
+Según Rissanen (1978) y Wallace (1968), la longitud de descripción de un modelo está relacionada con su complejidad. Si los pesos de un mínimo pueden representarse con baja precisión (pocos bits por peso), la descripción total del modelo es corta. El artículo formaliza esto con una variante del algoritmo de Gibbs (ver Apéndice A.1).
+\end{notatecnica}
+
+\textbf{Resumen en una frase:} \textit{No todos los mínimos son iguales. Los mínimos planos (valles anchos) corresponden a redes más simples que generalizan mejor.}
+
+% ============================================================
+\section{Sección 1 — Ideas básicas y esquema (Basic Ideas / Outline)}
+\label{sec:sec1}
+
+\subsection{Qué propone el artículo}
+
+Los autores presentan un algoritmo llamado \textbf{FMS (Flat Minimum Search)} que busca mínimos planos en lugar de cualquier mínimo. A diferencia de métodos anteriores (como weight decay o ``optimal brain surgeon''), FMS:
+
+\begin{itemize}[leftmargin=2cm]
+    \item No depende de elegir un ``buen'' prior sobre los pesos.
+    \item Usa un prior sobre las \textbf{funciones de entrada/salida}, que automáticamente toma en cuenta la arquitectura de la red y el conjunto de entrenamiento.
+    \item Requiere calcular derivadas de segundo orden (la Hessiana), pero con métodos eficientes mantiene la misma complejidad computacional que el backprop estándar.
+    \item Automáticamente poda (elimina) unidades, pesos y líneas de entrada que no son importantes.
+\end{itemize}
+
+\subsection{El esquema del artículo}
+
+El artículo se organiza así (extracto del propio artículo, traducido y simplificado):
+
+\begin{enumerate}
+    \item \textbf{Sección 2:} Define los conceptos básicos: medidas de error, mínimos aceptables, cajas ($M_w$) en el espacio de pesos.
+    \item \textbf{Sección 3:} Presenta el algoritmo FMS.
+    \item \textbf{Sección 4:} Deriva formalmente el algoritmo (las condiciones de planitud).
+    \item \textbf{Sección 5:} Muestra resultados experimentales con redes feedforward y recurrentes.
+    \item \textbf{Sección 6:} Compara con trabajos previos.
+    \item \textbf{Sección 7:} Limitaciones y trabajo futuro.
+    \item \textbf{Apéndice:} Justificación teórica detallada (Gibbs, MDL, derivaciones de la Hessiana, pseudocódigo).
+\end{enumerate}
+
+\begin{definicion}[Flat Minimum Search (FMS)]
+\textbf{FMS} es el algoritmo propuesto. En lugar de minimizar solo el error de entrenamiento, minimiza una función que combina el error con una medida de la ``planitud'' de la región alrededor de los pesos actuales. Esto se hace calculando cuánto cambia la salida si perturbamos los pesos dentro de una ``caja''.
+\end{definicion}
+
+% ============================================================
+\section{Sección 2 — Tarea, arquitectura y cajas}
+\label{sec:sec2}
+
+\subsection{La tarea de generalización}
+
+Queremos aproximar una función desconocida $f: X \to Y$, donde $X \subset \mathbb{R}^N$ (entradas) y $Y \subset \mathbb{R}^K$ (salidas). El conjunto de datos $D$ se divide en:
+
+\begin{itemize}
+    \item $D_0$: datos de entrenamiento (usados para ajustar los pesos).
+    \item $D \setminus D_0$: datos de prueba o test (usados para medir generalización, no para ajustar pesos).
+\end{itemize}
+
+La red neuronal es una función $net(w): x \mapsto o(w; x)$, donde $o(w; x) \in \mathbb{R}^K$ es la salida de la red con pesos $w$ y entrada $x$.
+
+\subsection{Las ``cajas'' en el espacio de pesos}
+
+Un concepto clave del artículo es la \textbf{caja} (box) $M_w$ centrada en un vector de pesos $w$. Cada lado de la caja es paralelo a un eje del espacio de pesos. Si tenemos $L$ pesos, la caja es un \textbf{hipercuboide} de $L$ dimensiones.
+
+\begin{ejemplo}[Visualización de una caja en 2 dimensiones]
+Si la red solo tuviera 2 pesos ($w_1$ y $w_2$), la caja sería un rectángulo centrado en $(w_1, w_2)$. El ancho en la dirección de $w_1$ es $2\delta_1$, y en la de $w_2$ es $2\delta_2$. Un mínimo ``plano'' es aquel donde este rectángulo puede ser muy grande sin que el error suba por encima de un umbral $E_{\text{tol}}$.
+\end{ejemplo}
+
+\subsection{Error tolerable y mínimos aceptables}
+
+Se define $E_{\text{tol}} > 0$: el error máximo ``aceptable''. Un peso $w$ es un \textbf{mínimo aceptable} si dentro de su caja $M_w$ el error nunca supera $E_{\text{tol}}$ y es aproximadamente constante (es decir, la caja es ``plana'').
+
+\begin{definicion}[Mínimo aceptable]
+Un \textbf{mínimo aceptable} es un vector de pesos $w$ tal que existe una caja $M_w$ (centrada en $w$) dentro de la cual todas las redes inducidas por los pesos en la caja tienen un error de entrenamiento menor o igual a $E_{\text{tol}}$, y la salida de la red no cambia significativamente.
+\end{definicion}
+
+\subsection{Notación matemática simplificada}
+
+\begin{itemize}
+    \item $w_{ij}$: peso de la conexión de la unidad $j$ a la unidad $i$.
+    \item $w \in \mathbb{R}^L$: vector que agrupa todos los $w_{ij}$.
+    \item $o_k(w; x)$: activación de la unidad de salida $k$ con pesos $w$ y entrada $x$.
+    \item $E(D_0; w)$: error cuadrático medio entre las salidas de la red y los objetivos $y_p$ para los datos $D_0$.
+\end{itemize}
+
+\begin{notatecnica}[Sobre el error cuadrático]
+En el artículo, el error cuadrático para un ejemplo $(x_p, y_p)$ es $E(w; x_p) = \frac{1}{2} \sum_{k} (y_{pk} - o_k(w; x_p))^2$. El factor $1/2$ es convencional y simplifica las derivadas.
+\end{notatecnica}
+
+% ============================================================
+\section{Sección 3 — El algoritmo FMS}
+\label{sec:sec3}
+
+\subsection{La función objetivo que minimiza FMS}
+
+FMS no minimiza solo el error. Minimiza:
+
+\begin{equation}
+B(w; X_0) = C + \lambda \sum_{p \in X_0} B(w; x_p)
+\label{eq:objetivo}
+\end{equation}
+
+donde $C$ es una constante de regularización, $\lambda > 0$ es un hiperparámetro que controla el equilibrio entre error y planitud, y $B(w; x_p)$ es un término adicional que mide cuánto cambia la salida de la red si perturbamos los pesos dentro de la caja.
+
+\subsection{Cómo se calcula el gradiente}
+
+Para minimizar $B$, necesitamos su gradiente (derivada primera) con respecto a cada peso $w_{uv}$. Esto requiere calcular derivadas segundas de la salida de la red ($\partial^2 o_k / \partial w_{ij} \partial w_{uv}$), que involucran la \textbf{Hessiana} de cada unidad de salida.
+
+\begin{notatecnica}[Complejidad computacional]
+Aunque parece que calcular derivadas segundas debería ser mucho más lento que el backprop (que usa solo derivadas primeras), los autores usan los métodos eficientes de Pearlmutter (1994) y Müller (1993). Esto permite calcular el producto de la Hessiana por un vector en $O(L)$, es decir, con la misma complejidad que un paso de backprop.
+\end{notatecnica}
+
+\subsection{El papel del hiperparámetro $\lambda$}
+
+$\lambda$ controla el ``compromiso'' entre minimizar el error y maximizar la planitud. Un $\lambda$ grande favorece mínimos muy planos (posiblemente con mayor error de entrenamiento). Un $\lambda$ pequeño favorece mínimos con menor error (posiblemente más agudos).
+
+\begin{ejemplo}[Analogía del hiperparámetro]
+Imagina que buscas un lugar para acampar. Quieres que sea bajo (poco error) pero también que sea un terreno amplio (plano), porque si el terreno es estrecho y empinado, cualquier paso te haría caer (generalizar mal). $\lambda$ es como tu preferencia personal: ¿prefieres un lugar muy bajo aunque sea pequeño, o un lugar un poco más alto pero con mucho espacio alrededor?
+\end{ejemplo}
+
+% ============================================================
+\section{Sección 4 — Derivación formal}
+\label{sec:sec4}
+
+Esta sección es la más matemática del artículo. Explicamos las ideas clave sin entrar en todas las ecuaciones.
+
+\subsection{Condición de planitud 1: robustez a perturbaciones}
+
+Se define una medida $E_D(w; \tilde{w})$ que cuantifica cuánto cambia la salida si cambiamos los pesos de $w$ a $\tilde{w}$ (donde $\tilde{w}$ está dentro de la caja). La condición exige que este cambio sea pequeño. Es una condición de ``tolerancia a perturbaciones'' o ``robustez''.
+
+\subsection{Condición de planitud 2: igual planitud en todas las direcciones}
+
+No basta con que la caja sea grande en una sola dirección. Queremos que sea grande en todas. Esto se impone exigiendo que una expresión cuadrática (que involucra las derivadas segundas) sea igual en todas las direcciones. El resultado es que el algoritmo minimiza la \textbf{varianza} de las funciones inducidas por los pesos dentro de la caja.
+
+\subsection{Aproximación lineal}
+
+Para hacer los cálculos manejables, los autores aproximan los cambios con una expansión lineal (primer orden) y cuadrática (segundo orden). Esto es válido si la caja es suficientemente pequeña, y el artículo prueba en el Apéndice A.2 que, a medida que el algoritmo avanza, las cajas válidas se hacen más grandes.
+
+\begin{definicion}[Aproximación lineal y cuadrática]
+Una \textbf{aproximación lineal} usa solo la derivada primera para aproximar una función cerca de un punto. Una \textbf{aproximación cuadrática} usa también la derivada segunda, capturando la curvatura. Cerca de un mínimo, la aproximación cuadrática es mucho más precisa que la lineal.
+\end{definicion}
+
+% ============================================================
+\section{Sección 5 — Experimentos}
+\label{sec:sec5}
+
+\subsection{Experimento 1: clasificación ruidosa}
+
+Tarea: decidir si un punto $(x, y)$ en el plano tiene $x > 0$ (clase 1) o $x \leq 0$ (clase 0). Hay ruido: los datos se generan con una distribución gaussiana y luego se agregan errores aleatorios. El error inherente mínimo es 9.27\%.
+
+\textbf{Resultado:} FMS deja una sola unidad oculta activa (la que usa solo el eje $x$) y poda el resto. Backprop, en cambio, usa muchas unidades ocultas y aprende los outliers (sobreajusta). La tabla del artículo muestra que FMS logra errores mucho más cercanos al óptimo.
+
+\subsection{Experimentos 3--5: predicción del mercado bursátil alemán (DAX)}
+
+Se predice la tendencia del índice DAX usando indicadores fundamentales (interés, producción, sentimiento empresarial) y luego técnicos (RSI, MACD, etc.).
+
+\textbf{Lección importante:} El artículo señala que el MSE (error cuadrático medio) no es una buena medida para este problema. FMS a veces tiene mayor MSE que weight decay, pero hace más predicciones correctas. Esto ocurre porque FMS hace predicciones ``fuertes'' (valores grandes cuando está seguro), mientras que weight decay hace predicciones ``tímidas'' (valores cercanos a cero).
+
+\begin{ejemplo}[Por qué MSE puede ser engañoso]
+Si el objetivo real es $+1$ y predices $+0.9$, el error cuadrático es $(0.1)^2 = 0.01$. Si predices $-0.9$, el error es $(1.9)^2 = 3.61$. Weight decay podría predecir valores cercanos a 0 para evitar errores grandes, logrando un MSE bajo, pero haciendo pocas predicciones útiles. FMS se arriesga más y, aunque cometa errores grandes ocasionales, acierta más a menudo en la dirección correcta.
+\end{ejemplo}
+
+% ============================================================
+\section{Sección 6 — Comparación con métodos previos}
+\label{sec:sec6}
+
+El artículo clasifica los métodos anteriores en dos categorías:
+
+\subsection{Categoría 1: priors sobre los pesos}
+
+Métodos como \textbf{weight decay} (Weigend et al., 1991; Krogh \& Hertz, 1992) y \textbf{Hinton \& van Camp} (1993) asumen que hay una distribución ``buena'' de los pesos (por ejemplo, gaussiana). El problema: no siempre existe un buen prior para todas las arquitecturas y datos.
+
+\begin{definicion}[Weight decay]
+\textbf{Weight decay} es una técnica de regularización que penaliza los pesos grandes sumando un término $\lambda \|w\|^2$ al error de entrenamiento. Esto favorece pesos pequeños, lo que puede mejorar la generalización, pero no distingue entre pesos importantes y no importantes de forma inteligente.
+\end{definicion}
+
+\subsection{Categoría 2: validación y poda}
+
+Métodos como \textbf{optimal brain damage/surgeon} (LeCun et al., 1990; Hassibi \& Stork, 1993) y los basados en \textbf{validación cruzada} (Stone, 1974) seleccionan la arquitectura antes o después del entrenamiento. No la ajustan durante.
+
+\textbf{La ventaja de FMS:} Usa un prior sobre \textbf{funciones de entrada/salida}, no sobre los pesos. Esto toma automáticamente en cuenta la arquitectura de la red y el conjunto de datos, sin requerir que el usuario elija un buen prior de pesos.
+
+% ============================================================
+\section{Sección 7 — Limitaciones y futuro}
+\label{sec:sec7}
+
+\subsection{Limitaciones reconocidas por los autores}
+
+\begin{enumerate}
+    \item \textbf{Ajuste de $\lambda$:} Se hace con una heurística (de Weigend et al., 1991). Una justificación teórica completa requeriría calcular derivadas de tercer orden, lo cual es impracticable.
+    \item \textbf{Cajas alineadas con ejes:} Las cajas $M_w$ son hipercuboides con lados paralelos a los ejes. Esto puede subestimar el volumen real del mínimo plano. Sería interesante usar aproximaciones no alineadas.
+    \item \textbf{Múltiples inicializaciones:} El artículo sugiere que usar un ``comité'' de FMS con diferentes inicializaciones podría mejorar los resultados, pero esto queda como trabajo futuro.
+\end{enumerate}
+
+\subsection{Aplicaciones futuras mencionadas}
+
+Los autores sugieren que FMS podría ser útil para \textbf{aprendizaje no supervisado}, entrenando auto-codificadores (auto-associators) para obtener códigos eficientes (factoriales, locales o dispersos) de los datos. Experimentos iniciales con reconocimiento de vocales muestran resultados prometedores.
+
+% ============================================================
+\section{Apéndice — Justificación teórica (resumen pedagógico)}
+\label{sec:apendice}
+
+\subsection{A.1 — Mínimos planos como hipótesis más probables}
+
+El artículo introduce una \textbf{nueva definición de error de generalización} que se divide en:
+
+\begin{itemize}
+    \item \textbf{Error de subajuste (underfitting):} La hipótesis no aproxima bien los datos de entrenamiento (error grande en $D_0$).
+    \item \textbf{Error de sobreajuste (overfitting):} La hipótesis se ajusta demasiado a $D_0$ y no funciona bien con datos nuevos.
+\end{itemize}
+
+Usando una variante del \textbf{algoritmo de Gibbs} y la \textbf{distancia de Kullback-Leibler} (que mide cuánto difiere una distribución de probabilidad de otra), los autores derivan que, entre todas las hipótesis con bajo subajuste, las que minimizan el sobreajuste relativo son las que corresponden a mínimos planos.
+
+\subsection{A.2 — ¿Por qué la Hessiana disminuye?}
+
+Se demuestra matemáticamente que en mínimos aceptables, los términos de la Hessiana correspondientes a pesos grandes tienden a ser pequeños (porque los pesos grandes hacen que la función sea robusta), mientras que los correspondientes a pesos pequeños pueden ser grandes. Esto confirma que FMS hace que los pesos ``importantes'' sean robustos.
+
+\subsection{A.3 — Implementación eficiente}
+
+Se describe cómo calcular el producto de un vector con la Hessiana de la salida en $O(L)$ usando los algoritmos de Pearlmutter y Müller. Esto hace que FMS sea computacionalmente viable, con la misma complejidad que un paso de backprop estándar.
+
+% ============================================================
+\section{Glosario pedagógico}
+\label{sec:glosario}
+
+\begin{tcolorbox}[colback=grisclaro,colframe=azul,title=Glosario de términos del artículo,breakable]
+\textbf{Backpropagation (BP):} Algoritmo que entrena redes neuronales propagando el error hacia atrás y ajustando los pesos según el gradiente.\\[0.2cm]
+\textbf{Flat Minimum (mínimo plano):} Región amplia en el espacio de pesos donde el error se mantiene bajo. Corresponde a redes simples con buena generalización.\\[0.2cm]
+\textbf{Sharp Minimum (mínimo agudo):} Región estrecha donde los pesos deben ser muy precisos. Corresponde a redes complejas con riesgo de sobreajuste.\\[0.2cm]
+\textbf{MDL (Minimum Description Length):} Principio de la teoría de la información que dice que el mejor modelo es el que describe los datos con menos bits.\\[0.2cm]
+\textbf{Gibbs Algorithm:} Método estadístico para muestrear distribuciones de probabilidad, usado aquí para modelar la distribución posterior sobre hipótesis.\\[0.2cm]
+\textbf{Kullback-Leibler Distance (distancia K-L):} Medida de cuánto difiere una distribución de probabilidad de otra.\\[0.2cm]
+\textbf{Weight Decay (WD):} Técnica de regularización que penaliza pesos grandes.\\[0.2cm]
+\textbf{Optimal Brain Surgeon / Damage (OBS / OBD):} Métodos de poda que eliminan pesos basándose en derivadas de segundo orden.\\[0.2cm]
+\textbf{Overfitting (sobreajuste):} El modelo memoriza los datos de entrenamiento (incluido el ruido) y no generaliza.\\[0.2cm]
+\textbf{Underfitting (subajuste):} El modelo es demasiado simple y no captura la señal de los datos.\\[0.2cm]
+\textbf{Hessiana ($H$):} Matriz cuadrada de derivadas segundas. Describe la curvatura de la función de error en cada dirección.\\[0.2cm]
+\textbf{Eigenvalues (valores propios):} Números asociados a la Hessiana que indican cuánto se curva la función en direcciones específicas. Valores pequeños = región plana.
+\end{tcolorbox}
+
+% ============================================================
+\section{Reflexión y cierre}
+\label{sec:cierre}
+
+Este artículo conecta tres áreas aparentemente distintas:
+
+\begin{enumerate}
+    \item \textbf{Geometría del aprendizaje:} La forma de los mínimos (planos vs. agudos) en el espacio de pesos determina la calidad del modelo aprendido.
+    \item \textbf{Teoría de la información:} La longitud mínima de descripción (MDL) proporciona un criterio objetivo de simplicidad.
+    \item \textbf{Generalización:} Un modelo que puede ser descrito con pocos bits (porque sus pesos son robustos a perturbaciones) generaliza mejor.
+\end{enumerate}
+
+La idea de que ``simple es mejor'' es una constante en el aprendizaje automático moderno, desde la regularización $L_1$ y $L_2$ hasta la teoría de la información aplicada al aprendizaje profundo. Este artículo de 1997 es un precursor fundamental.
+
+\vspace{1cm}
+\begin{center}
+{\color{grisclaro}\rule{10cm}{0.4pt}}\\[0.3cm]
+{\small\textit{Apunte pedagógico elaborado para uso personal — IPRE 2026-2 \\ Basado en: Hochreiter, S. \& Schmidhuber, J. (1997). \textbf{Flat Minima}. Neural Computation, 9(1), 1--42.}}
+\end{center}
+
+\end{document}
