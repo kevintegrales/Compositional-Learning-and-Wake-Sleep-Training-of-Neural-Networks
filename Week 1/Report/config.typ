@@ -3,7 +3,7 @@
 // -----------------------------------------------
 
 // Título de la presentación
-#let your_title = "Reporte - Semana 0"
+#let your_title = "Reporte - Semana 1"
 #let your_subtitle = ""
 
 // Modifica estas líneas pra tu poner tu nombre y email

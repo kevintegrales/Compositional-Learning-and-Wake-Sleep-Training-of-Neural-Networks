@@ -1,8 +1,4 @@
 #import "template.typ": *
-#import "@preview/hydra:0.4.0": hydra
-#import "@preview/tablex:0.0.9": tablex, cellx, colspanx, rowspanx, vlinex
-
-#import "template.typ": *
 #import "math_functions.typ": *
 #import "config.typ" as cf
 
@@ -25,35 +21,22 @@
 
 // Funciones (NO mover este bloque)
 #import "/math_functions.typ": *
-#import "/notalmar.typ": *
-#include "/notalmar.typ"
 
 // Cuerpo
 
-*Fecha*: 09.08.2026
+*Fecha*: 16.08.2026
 = (a) Avance de la Semana
 #v(10pt)
-Esta semana quise considerarla como una introducción, por lo que revisé en una primera lectura todos los primeros documentos:
-- *Aprendizaje Composicional y Generalización OOD (_Notas de Clase MAT2320, Clase 16_).*
-- *Paper Mastering Diverse Domains through World Models.*
 
-Para poder crear una base sólida sobre la que empezar a revisar investigaciones, me percaté del primer documento que requeriría aprender un poco sobre Teoría de la Computación, en particular sobre Máquinas de Turing y la Complejidad de Kolmogorov. Para ello, decidí leer el libro *"An Introduction to Kolmogorov Complexity and Its Applications" de Ming Li y Paul Vitànyi*, que vi citado en sus notas de clase. Hasta el momento, he leído las secciones 1.1, 1.2, 1.4 y 1.7 (las que se encuentran entremedio decidí omitirlas dado que ya conocía el contenido). Justamente alcancé a revisar la materia correspondiente a _Máquinas de Turing, computabilidad, Halting Problem, Oráculos y Richard-Berry paradox_, que eran conceptos que aparecían mencionados en las notas y creo ahora entenderlos bastante bien. _NO alcancé a revisar la Complejidad de Kolmogorov_, aunque ya tengo una noción de qué corresponde, gracias a las notas de clase y a la sección 1.1 del libro de Li.
+Estudié la sección *1.8. The Roots of Kolmogorov Complexity*, donde se introducía la noción de _compresión_ y de _complejidad_, entendida como la información intrínseca y objetiva de un objeto, a partir de la Teoría de Información. Además, se mencionaba que la _regularidad_ es un atributo que facilita la compresión de información.
 
-Por el segundo documento, decidí además repasar las nociones de Reinforcement Learning en el libro *"Reinforcement Learning: An Introduction" de Richard Sutton y Andrew Barto*. De él leí las secciones 1.1, 1.2, 1.3, 1.4, 1.6, 3.1, 3.2, 3.3, 3.4 y 3.6. Así, comprendo mejor el funcionamiento de los Markov Decision Processes.
+Leí en su totalidad las *Notas de clase sobre DreamCoder*. Aquí se introducía el concepto de sueño-vigilia tratado para la síntesis de programas usando Cálculo Lambda. Primero, el algoritmo en su fase de vigilia busca el programa que mejor resuelva la tarea. Segundo, el algoritmo entra en la fase de sueño, que está subdividida en dos partes: la primera, llamada _abstracción_, consiste en la búsqueda de una librería que refactorice el código, escogiendo aquella abstracción que tenga mejor (más negativo) _compression gain_; la segunda, llamada _ensoñación_, consistía en imaginar escenarios basados en una distribución a priori que permite obtener data sintética ilimitada. Los resultados muestran que aprende funciones típicas de programación e incluso leyes físicas, como las leyes de Kepler. Además, se asegura que cada una de las fases del modelo es útil en cuanto a su rendimiento.
 
+Por último, estudié el paper *Flat Minima* de Hochreiter y Schmidhuber (1997), en donde se planteaba el algoritmo _Flat Minimum Search (FMS)_ que, basado en el Minimum Description Length Principle, encontraba mínimos _flat_, donde la función de pérdida con que se entrenaba una red neuronal tenía pesos simples y estables. Este algoritmo _outperformeaba_ a otros como Backpropagation o Weight Decay en experimentos como la predicción de la bolsa. 
 
 = (b) Dudas
-- Revisando con IA las fuentes que me entregó usted, se me indicó que existen áreas de literatura vinculadas con el sueño-vigilia:
-  1. Wake-Sleep bayesiano clásico (que pareciera ser el que usa DreamCoder).
-  2. "Dreaming" como imaginación latente en RL (que pareciera ser el que usa Dreamer)
-  3. El sleep-replay biológico para aprendizaje continuo.
-  Mi consulta es, ¿nos centraremos específicamente en uno de ellos o trabajaremos viéndolos de manera general?
-- Respecto a lo que realizaré en el semestre, ¿revisaré únicamente literatura o también implementaré algún algoritmo? ¿O tengo libertad para decidirlo yo?
-- Mi otra duda tiene relación con cuánto trabajo semanal se espera que realice. ¿Debería avanzar al menos trabajando con un paper semanal una vez tenga las bases de la teoría o es muy poco?
+
+
 
 
 = (c) Propuesta para Próxima Semana
-- Aprender a profundidad qué es la *Complejidad de Kolmogorov y el Teorema de Invarianza* en el libro de Ming Li.
-- Aprender sobre el MDL en el libro *"The Minimum Description Length Principle" de Grünwald* o en el de Ming Li.
-- Revisar con detenimiento las notas *"DreamCoder and Wake-Sleep Library Learning"*.
-- Si me llegase a sobrar tiempo, leer el paper *"The wake-sleep algorithm for unsupervised neural networks" de Hinton, Dayan, Frey & Neal (1995)*, que entiendo ser la base del proyecto.
