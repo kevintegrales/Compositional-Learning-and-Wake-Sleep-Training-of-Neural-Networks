@@ -54,11 +54,11 @@
   pad([
       #par(leading: 15pt)[
         #align(center)[
-        #set text(font: "DM Sans", weight: 550, size: 36pt, style: "normal", fill: dark_color)
+        #set text(font: "PT Sans", weight: 550, size: 36pt, style: "normal", fill: dark_color)
           #title
         ]
         \
-        #set text(size: 19pt, style: "oblique", font: "DM Sans", fill: dark_color)
+        #set text(size: 19pt, style: "oblique", font: "PT Sans", fill: dark_color)
         #subtitle
       ]
   ], top: 80%, bottom: 2%)
@@ -67,7 +67,7 @@
   pad(
     align(left)[
         #set text(
-          font: "DM Sans", 
+          font: "PT Sans", 
           fill: dark_color
         )
         
