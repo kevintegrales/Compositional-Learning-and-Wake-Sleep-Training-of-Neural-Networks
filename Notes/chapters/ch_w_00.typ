@@ -31,7 +31,7 @@ Para investigar la complejidad de Kolmogorov con aplicaciones en el aprendizaje 
 VAEs
 
 == Reinforcement Learning
-_Reinforcement Learning: An Introduction, Chapter 1._
+Esta sección está basada en los capítulos 1 y 3 del libro  _Reinforcement Learning: An Introduction_ de Richard S. Sutton  y  Andrew G. Barto (2014-2015).
 
 === Una Introducción al Reinforcement Learning
 El *Reinforcement Learning* (RL) es un acercamiento _computacional_ al _aprendizaje por interacción_, el cual pareciera subyacer a cualquier teoría del aprendizaje e inteligencia. La guía de este tipo de aprendizaje son las metas o retornos que, por lo general, son a largo plazo.
@@ -48,7 +48,7 @@ Finalmente, el RL es parte de una tendencia en la IA de retorno a principios gen
 
 === Elementos del Reinforcement Learning
 
-El ciclo de aprendizaje en el RL tiene dos actores principales: el agente y el ambiente. En esencia, el agente busca una manera de actuar dado cierto estado y el ambiente se encarga de indicarle una recompensa dado su actuar y el siguiente estado en que estará. 
+El ciclo de aprendizaje en el RL tiene dos actores principales: el *agente* y el *ambiente*. En esencia, el agente toma decisiones buscando una manera de actuar dado cierto estado y el ambiente, el objeto con el que el agente interactúa, se encarga de indicarle una recompensa dado su actuar y el siguiente estado en que estará. 
 
 De manera más técnica, un sistema de RL se compone de: una _política_, una _señal de recompensa_, una _función de valor_ y, opcionalmente, un _modelo del ambiente_.
 
@@ -62,6 +62,21 @@ El *modelo del ambiente* es un objeto que imita el comportamiento del ambiente y
 
 === Procesos de Decisión de Markov Finitos
 Este problema define el campo del RL.
+
+Una especificación completa de un ambiente define una *tarea*, esto es, una instancia de RL.
+
+A continuación se empieza a introducir notación.
+El agente y el ambiente interactúan en instantes de tiempo discretos, $t = 0,1,2,...$ (aunque existen ideas que consideran el tiempo continuo). En cada instante, el agente recibe una *representación del estado del ambiente*, $S_t in SSS$, donde $SSS$ es el *espacio de estados* (_state space_). En esa situación, escoge una *acción* $A_t in AAA(S_t)$, donde $AAA(S_t)$ corresponde al conjunto de acciones posibles dado el estado $S_t$. Como consecuencia, un instante de tiempo después, el ambiente retorna una *recompensa* $R_(t+1) in RRR$, donde $RRR subset RR$ es un conjunto de posibles recompensas. Además, el ambiente le indica el nuevo estado $S_(t+1)$ al agente.
+
+#figure[
+  #image("../images/rl_relation.png", width: 60%)
+]
+La política del agente la denotamos como $pi_t (a|s)$, entendida como la probabilidad de que $A_t = a$ dado el estado $S_t = s$. Así, los métodos de RL consistirán en especificar cómo el agente modifica su política a partir de los resultados que obtiene.
+
+#nota[ 
+  La frontera entre agente y ambiente suele estar más cerca al agente de lo que se cree. Por ejemplo, los motores y sensores de un robot se consideran parte del ambiente (pues pueden entenderse como estados y recompensas), no del agente. Normalmente, basta con preguntarse si el agente _no_ puede cambiar algo arbitrariamente. De ser así, entonces ese algo no pertenece al agente. De esta manera, la frontera agente-ambiente corresponde al límite de control del agente, no de su conocimiento.
+
+]
 
 
 #pagebreak()
