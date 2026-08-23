@@ -209,3 +209,11 @@ TO-DO]
   // 3. Dibuja el símbolo de fin de prueba (Q.E.D.).
   sym.qed
 }
+
+// Funciones short
+#let qquad = $space.quad$
+
+#let SSS = $cal(S)$
+#let AAA = $cal(A)$
+#let RRR = $cal(R)$
+#let BBB = $cal(B)$

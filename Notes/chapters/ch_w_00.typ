@@ -3,6 +3,8 @@
 #import "/notalmar.typ": *
 #include "/notalmar.typ"
 
+
+
 == Introducción y Definiciones Básicas
 
 === Lenguaje Formal
@@ -52,7 +54,7 @@ El ciclo de aprendizaje en el RL tiene dos actores principales: el *agente* y el
 
 De manera más técnica, un sistema de RL se compone de: una _política_, una _señal de recompensa_, una _función de valor_ y, opcionalmente, un _modelo del ambiente_.
 
-Una *política* (_policy_) es una función que el agente aprenderá y que define la manera en que el learner se comporta en determinado instante. Corresponde a una especie de reglas estímulo-respuesta. En general, estas funciones son estocásticas.
+Una *política* (_policy_) es un mapeo (que denota una probabilidad) que el agente aprenderá y que define la manera en que el learner se comporta en determinado instante. Corresponde a una especie de reglas estímulo-respuesta. En general, estas funciones son estocásticas.
 
 Una *señal de recompensa* (_reward signal_) es el _reward_ que entrega el ambiente al agente en cada paso de tiempo. Ella afecta directamente la manera en que el agente se comportará. Por lo general, el objetivo del agente es _maximizar la recompensa total_, a largo plazo.
 
@@ -78,6 +80,62 @@ La política del agente la denotamos como $pi_t (a|s)$, entendida como la probab
 
 ]
 
+La recomenpensa es la manera en que comunicamos _qué_ es lo que queremos, no _cómo_ lo queremos.
+
+En general, buscamos maximizar el *retorno esperado*, esto es, la esperanza de $G_t$, una función de los retornos. Por ejemplo,
+$
+  G_t = sum_(j = t+1)^T R_j,
+$
+donde $T$ es el último paso, si es que tiene sentido que haya un útlimo paso. En dicho caso, cada *episodio* (o _intentos_) termina en un estado especial llamado *estado terminal*. Denotaremos con $SSS$ los estados no-terminales y con $SSS^+$ todos los estados, incluyendo a los terminales. 
+
+Cuando la interacción agente-ambiente no se puede separar en episodios identificables, es decir, no tenemos la noción de "último paso", llamamos a estas tareas _continuing tasks_. En este caso, tendríamos $T = infinity$ para $G_t$, por lo que podría diverger.
+
+Para que $G_t$ tenga un valor finito, se introduce el factor $0<=gamma<=1$ conocido como *tasa de descuento* para definir el *retorno descontado*
+$
+  G_t = sum_(k=0)^infinity gamma^k R_(t+k+1).
+$
+
+==== Unificación de Notación entre Tareas Episódicas y Continuas
+
+Para tareas episódicas, el estado que se tiene en el instante $t$ y episodio $i$ se denota $S_(t, i)$. Similarmente ocurre con $A_(t,i)$, $R_(t,i)$, $pi_(t,i)$, $T_i$. Como muchas veces estamos trabajando dentro de un episodio, se suele omitir el subdíndice $i$. 
+
+Además, para unificar la notación del retorno, se pensará que las tareas episódicas tienen infinitos pasos, pero que al llegar al estado terminal se quedan en un _estado absorbente_ que transiciona sólo a si mismo con retorno cero.
+
+==== Procesos de Decisión de Markov
+
+Si el espacio de estados y el de acciones son finitos, entonces estamos ante un *finite MDP*. Un finite MDP se definte completamente a partir de: el espacio de estados, el espacio de acciones y por las dinámicas paso a paso del ambiente. 
+
+Dado un estado $s$ y una acción $a$, la probabilidad de llegar al estado $s'$ y obtener una recompensa $r$ se denota por
+$
+  p(s',r|s,a) = Pr{S_(t+1) = s', R_(t+1) = r | S_t = s, A_t = a}.
+$
+Al tener todos los valores de $p$ dadas las posibles combinaciones de $s', t, s, a$, se tienen definidas las _dinámicas del ambiente_.
+
+Dadas estas dinámicas, se puede calcular lo que sea. Por ejemplo, los _retornos esperados de un par estado-acción_,
+$
+  r(s,a) &= EE(R_(t+1) | S_t = s, A_t = a) \ 
+    &= sum_(r in RRR) r dot Pr(R_(t+1) = r|S_t = s, A_t = a) \
+    &= sum_(r in RRR) r sum_(s' in SSS) p(s', r|s,a).
+$
+
+Así también se pueden tener las _probabilidades estado-transición_ (es decir, la probabilidad de pasar de un estado a otro tomando cierta acción),
+$
+  p(s'|s,a) = Pr(S_(t+1) = s' | S_t = S, A_t = a) = sum_(r in RRR) p(s', r|s,a).
+$
+
+Finalmente, también se pueden obtener los _retornos esperados para un triple estado-acción-siguiente estado_,
+$
+    r(s,a,s') &= EE(R_(t+1) | S_t = s, A_t = a, S_(t+1) = s') \ 
+    &= sum_(r in RRR) r dot Pr(R_(t+1) = r | S_t = s, A_t = a, S_(t+1) = s') \
+    &= sum_(r in RRR) r dot Pr(R_(t+1) = r, S_t = s, A_t = a, S_(t+1) = s') / Pr(S_t = s, A_t = a, S_(t+1) = s') \
+    &= sum_(r in RRR) r dot (Pr(R_(t+1) = r,  S_(t+1) = s' | A_t = a, S_t = s) cancel(Pr(A_t = a, S_(t) = s))) / (Pr(S_(t+1) = s' |A_t = a, S_(t) = s) cancel(Pr(A_t = a, S_(t) = s))) \
+    &= sum_(r in RRR) r dot p(s', r|s,a)/p(s'|a,s).
+$
+
+Para los MDP finitos podemos construir un *grafo de transición* que permiten resumir las dinámicas visualmente. En ellos existen dos tipos de nodos: los *nodos de estado*, de los cuales se construye uno por cada estado $S in SSS$; y los *nodos de acción*, de los cuales se construye uno por cada par estado-acción. Los nodos de acción tienen entrante una arista dirigida desde un nodo de estado y tienen saliente una (o más) arista(s) dirigida(s) a otro nodo(s) de estado, donde este tipo de aristas presentas anotada la probabilidad y recompensa correspondiente de la transición estado-acción-estado siguiente.
+
+==== Funciones de Valor
+
 
 #pagebreak()
 == DreamerV3
@@ -85,15 +143,6 @@ La política del agente la denotamos como $pi_t (a|s)$, entendida como la probab
 == Notas de Composicionalidad
 
 === ¿Qué no entendí?
-
-
-#pagebreak()
-== Computabilidad
-
-=== Máquinas de Turing
-
-
-
 
 
 
