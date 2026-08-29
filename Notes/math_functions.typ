@@ -217,3 +217,5 @@ TO-DO]
 #let AAA = $cal(A)$
 #let RRR = $cal(R)$
 #let BBB = $cal(B)$
+
+#let phia = $phi.alt$

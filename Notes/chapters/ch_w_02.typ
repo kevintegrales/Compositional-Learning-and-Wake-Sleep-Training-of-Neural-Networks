@@ -54,8 +54,8 @@ Un *espacio latente* es un espacio vectorial de dimensión reducida donde una re
 Un *autoencoder variacional (VAE)* es una red neuronal generativa que toma datos de entrada, los transforma a un espacio latente cotinuo según una distribución de probabilidad (lo que permitirá generar nuevos datos) y toma los puntos de dicho espacio para reconstruirlos o transformarlos en nuevos datos.
 
 Más formalmente, un VAE tiene:
-- Un *encoder* $q_phi.alt (z | x, y)$: dado un dato $(x,y)$ de entrada, produce parámetros de media $mu$ y varianza $Sigma$ de una distribución de probabilidad Normal multivariada sobre los posibles valores de un vector $z$ en el espacio latente de programas. Además, el encoder procesa cada par por separado y luego los promedia, de modo que el LPN sea invariante a la _permutación de ejemplos_. $phi.alt$ corresponde a los pesos de la red neuronal del encoder.  
-- Un *decoder* $p_theta (y | x, z)$: dado un programa latente $z$ y un input nuevo $x$, reconstruye los datos de salida $y$. Se construye maximizando la verosimilitud de reconstruir bien los datos. $theta$ corresponde a los pesos de la red neuronal de decoder.
+- Un *encoder* $q_phia (z|x, y)$: dado un dato $(x,y)$ de entrada, produce parámetros de media $mu$ y varianza $Sigma$ de una distribución de probabilidad Normal multivariada sobre los posibles valores de un vector $z$ en el espacio latente de programas. Además, el encoder procesa cada par por separado y luego los promedia, de modo que el LPN sea invariante a la _permutación de ejemplos_. $phi.alt$ corresponde a los pesos de la red neuronal del encoder.  
+- Un *decoder* $p_theta (y|x, z)$: dado un programa latente $z$ y un input nuevo $x$, reconstruye los datos de salida $y$. Se construye maximizando la verosimilitud de reconstruir bien los datos. $theta$ corresponde a los pesos de la red neuronal de decoder.
 
 El VAE permitirá modelar la ambigüedad de los muchos programas posibles con la distribución de probabilidad.
 
