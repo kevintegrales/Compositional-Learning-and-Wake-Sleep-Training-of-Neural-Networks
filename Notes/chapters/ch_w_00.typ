@@ -5,33 +5,6 @@
 
 
 
-== Introducción y Definiciones Básicas
-
-=== Lenguaje Formal
-/*Un *lenguaje formal* es un conjunto de cadenas formadas a partir de un conjunto finito de símbolos, estructuradas de acuerdo a reglas específicas.
-
-- *Notación:* Sea un alfabeto $Sigma$ (un conjunto finito de símbolos, por ejemplo, ${0, 1}$). El cierre de Kleene, $Sigma^*$, denota el conjunto de todas las cadenas finitas posibles formadas con símbolos de $Sigma$. Un lenguaje formal $L$ es cualquier subconjunto de $Sigma^*$, es decir, $L subset.eq Sigma^*$. Si $x$ es una cadena que pertenece al lenguaje, se escribe $x in L$.
-
-Para investigar la complejidad de Kolmogorov con aplicaciones en el aprendizaje composicional y el algoritmo wake-sleep, los siguientes conceptos son fundamentales:*/
-
-
-
-=== Entropía de Shannon (Teoría de la Información)
-/*Mide la incertidumbre o la cantidad de información esperada de una variable aleatoria que sigue una distribución de probabilidad. A diferencia de la complejidad de Kolmogorov, que mide la información contenida en un objeto algorítmico individual, la entropía de Shannon asume un modelo probabilístico subyacente. El aprendizaje wake-sleep busca codificar información acercándose a este límite.
-
-- *Notación:* $H(X) = - sum_(x in cal(X)) P(x) log_2 P(x)$, donde $X$ es una variable aleatoria con un conjunto de posibles resultados $cal(X)$ y función de masa de probabilidad $P(x)$.
-*/
-
-=== Principio de Longitud de Descripción Mínima (MDL)
-/*Es un método de inferencia estadística que postula que la mejor hipótesis (o modelo) para un conjunto de datos es la que permite la compresión de esos datos. Constituye un puente práctico entre la complejidad de Kolmogorov (incomputable) y el aprendizaje automático, útil en el aprendizaje composicional para seleccionar representaciones compactas y modulares.
-
-- *Notación:* El objetivo es encontrar una hipótesis $H$ dentro de un espacio de hipótesis $cal(H)$ que minimice $L(H) + L(D|H)$. Aquí, $L(H)$ es la longitud en bits para describir el modelo, y $L(D|H)$ es la longitud para describir los datos $D$ dado el modelo $H$.
-*/
-
-=== Encoders y Autoencoders
-
-VAEs
-
 == Reinforcement Learning
 Esta sección está basada en los capítulos 1 y 3 del libro  _Reinforcement Learning: An Introduction_ de Richard S. Sutton  y  Andrew G. Barto (2014-2015).
 
@@ -54,7 +27,7 @@ El ciclo de aprendizaje en el RL tiene dos actores principales: el *agente* y el
 
 De manera más técnica, un sistema de RL se compone de: una _política_, una _señal de recompensa_, una _función de valor_ y, opcionalmente, un _modelo del ambiente_.
 
-Una *política* (_policy_) es un mapeo (que denota una probabilidad) que el agente aprenderá y que define la manera en que el learner se comporta en determinado instante. Corresponde a una especie de reglas estímulo-respuesta. En general, estas funciones son estocásticas.
+Una *política* (_policy_) es un mapeo (que denota una probabilidad) que el agente aprenderá y que define la manera en que el learner se comporta en determinado instante. Corresponde a una especie de reglas estímulo-respuesta. En general, estos mapeos son estocásticos.
 
 Una *señal de recompensa* (_reward signal_) es el _reward_ que entrega el ambiente al agente en cada paso de tiempo. Ella afecta directamente la manera en que el agente se comportará. Por lo general, el objetivo del agente es _maximizar la recompensa total_, a largo plazo.
 
@@ -140,18 +113,4 @@ Para los MDP finitos podemos construir un *grafo de transición* que permiten re
 #pagebreak()
 == DreamerV3
 
-== Notas de Composicionalidad
-
-=== ¿Qué no entendí?
-
-
-
-
-#pagebreak()
-== Referencias Semana 0
-- *S0 - Notas-ApprComposicional*. (Una pasada para ver qué no conozco, otra para entender todo.)
-- Paper DreamCoder: *Mastering Diverse Domains through World Models* (Sólo hasta Sección 2).
-- *Li, M. & Vitányi, P. (2008). An Introduction to Kolmogorov Complexity and Its Applications*, 3ª ed. Springer. (C1 y C2)
-- *Sipser, M. (2012). Introduction to the Theory of Computation*, 3ª ed. — Capítulos 3 (máquinas de Turing) y 4 (decidibilidad, problema de la parada).
-- *Grünwald, P. D. (2007). The Minimum Description Length Principle. MIT Press* (C1) 
 

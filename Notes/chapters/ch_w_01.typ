@@ -111,7 +111,7 @@ Una función $D : {0,1}^* -> NN$ define un *código prefijo* (_prefix-code_) si 
     overline(x) &:= E_1 (x) =  1^(l(x)) 0 x \
     l(overline(x)) &= 2 l(x) + 1.
   $
-  Llamamos a $overline(x)$ la versión *auto-delimitante* (_self-limiting_) de la string $x$.
+  Llamamos a $overline(x)$ la versión *auto-limitante* (_self-limiting_) de la string $x$.
 ]
 
 

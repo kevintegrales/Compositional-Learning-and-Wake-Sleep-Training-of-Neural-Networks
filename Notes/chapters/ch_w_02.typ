@@ -59,6 +59,8 @@ Más formalmente, un VAE tiene:
 
 El VAE permitirá modelar la ambigüedad de los muchos programas posibles con la distribución de probabilidad.
 
+Puedes aprender más sobre VAEs en @vaes.
+
 ==== La Optimización en el Espacio Latente
 
 Tendremos
@@ -191,3 +193,5 @@ donde
 - *Transformer*: Arquitectura de red neuronal diseñada específicamente para procesar y generar datos secuenciales, como el lenguaje natural. Consisten en un _encoder_ (que convierte la entrada en una matriz) y en un _decoder_ (que genera una secuencia final en base a lo que generó el decoder y escogiendo aquella con mayor probabilidad de aparición).
 
 == Diferencias entre ambas investigaciones
+
+_PENDIENTE: MUY IMPORTANTE_
