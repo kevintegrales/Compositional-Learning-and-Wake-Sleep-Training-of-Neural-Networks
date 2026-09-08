@@ -8,6 +8,7 @@
 #let dy = $dif y$
 #let dx = $dif x$
 #let dt = $dif t$
+#let proport = $prop$
 
 // -----------------------------------------------
 // Funciones de contenido

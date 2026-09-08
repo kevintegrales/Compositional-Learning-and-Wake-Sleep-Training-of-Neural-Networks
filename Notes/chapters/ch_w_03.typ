@@ -163,8 +163,9 @@ Usaremos un único encoder neuronal para realizar inferencia posterior sobre _to
 ==== Evidence Lower Bound (ELBO)
 
 Para cada elección de encoder $q_pphia (zz|xx)$ (con $pphia$ ya fijo),
+*REVISAR*
 $
-  log p_ttheta (xx) &= integral  q_pphia (zz|xx) dot log p_ttheta (xx) dif zz \ 
+  EE(log p_ttheta (xx)) &= integral  q_pphia (zz|xx) dot log p_ttheta (xx) dif zz \ 
   &= EE_(zz ~ q_pphia (zz|xx)) [log p_ttheta (xx)] \
   &= EE_(zz ~ q_pphia (zz|xx)) [log ((p_ttheta (xx,zz)) / (p_ttheta (zz|xx)))] \
   &= EE_(zz ~ q_pphia (zz|xx)) [log ((p_ttheta (xx,zz)) / (q_pphia (zz|xx)) dot (q_pphia (zz|xx))/ (p_ttheta (zz|xx)))] \

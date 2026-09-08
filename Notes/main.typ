@@ -41,6 +41,10 @@
 = Semana 3
 #include "chapters/ch_w_03.typ"
 
+#pagebreak()
+= Semana 4
+#include "chapters/ch_w_04.typ"
+
 
 
 //#pagebreak()
