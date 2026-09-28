@@ -26,6 +26,16 @@
 #import "/notalmar.typ": *
 #include "/notalmar.typ"
 
+#show "FUT": box(fill: red, inset: 10pt, width: 100%)[#set align(center)
+Por hacer en el futuro]
+
+
+#show "POR": box(fill: orange, inset: 10pt, width: 100%)[#set align(center)
+Por hacer: Domingo]
+
+#show "TODO": box(fill: yellow, inset: 10pt, width: 100%)[#set align(center)
+Por hacer: Sábado]
+
 = Semana 0
 #include "chapters/ch_w_00.typ"
 

@@ -21,8 +21,8 @@
 #let your_math_font = "New Computer Modern Math"
 
 // Aquí puedes cambiar los colores de tu presentación (esto incluye las funciones como teoremas, definiciones, etc.)
-#let your_principal_color = "000000" // Recomiendo que sea oscuro
-#let your_secondary_color = rgb("C4A7CF") // Recomiendo que sea claro
+#let your_principal_color = "5800BD" // Recomiendo que sea oscuro
+#let your_secondary_color = rgb("BD0065") // Recomiendo que sea claro
 
 /*#let your_principal_color = "C223A5" // Recomiendo que sea oscuro
 #let your_secondary_color = "AE2FED" // Recomiendo que sea claro*/

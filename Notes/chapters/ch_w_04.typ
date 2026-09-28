@@ -22,6 +22,10 @@ Los VAEs son redes neuronales generativas que consisten en:
 En @vaes probamos que $EE(log p_ttheta (xx))$ se puede expresar como una suma de la ELBO y la divergencia KL. Esta esperanza indica qué tan bien se reconstruye un $xx$ es particular y la divergencia KL mide qué tan distintas son dos distribuciones, en particular, las distribuciones del prior y del encoder. Se ha propuesto muchas veces que el _posterior collapse_ surge por este último término.
 
 === Posterior Collapse as a Phase Transition in Variational Autoencoders
+#notat[Fuente][
+  Contenido estudiado de _"Posterior Collapse as a Phase Transition in Variational Autoencoders"_ de Z. Li et al. (2025).
+  #fuente_link("https://arxiv.org/abs/2510.01621", "arXiv:2510.01621")
+]
 
 Aquí se estudia el _posterior collapse_ como un problema de física estadística, proponiendo que existe un punto crítico (una _transición de fase_) en los VAEs, debido a la estructura y al dataset utilizado, que marca el cambio a un _posterior collapse_. 
 
@@ -99,6 +103,10 @@ donde los $xi_i^2$ son los valores propios de la matriz de covarianza de los dat
 
 
 === Posterior Collapse and Latent Variable Non-identifiability
+#notat[Fuente][
+  Contenido estudiado de _"Posterior Collapse and Latent Variable Non-identifiability"_ de Y. Wang et al. (2021).
+  #fuente_link("https://arxiv.org/abs/2301.00537", "arXiv:2301.00537")
+]
 
 El paper demuestra que un VAE sufre de _posterior collapse_ si, y sólo si, la variable latente del modelo es no-identificable. Además, proponen un nuevo tipo de VAE, el _latent-identifiable VAE_, el cual resuelve el colapso posterior sin sacrificar fidelidad (información relevante) a los datos.
 

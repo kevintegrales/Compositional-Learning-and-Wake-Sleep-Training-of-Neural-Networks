@@ -16,8 +16,10 @@
 
 == An Introduction to Variational Autoencoders
 <vaes>
-
-El siguiente contenido está basado en el documento "_An Introduction to Variational Autoencoders_" de Diederik P. Kingma y Max Welling (2019).
+#notat[Fuente][
+  Contenido estudiado de _"An Introduction to Variational Autoencoders"_ de D. P. Kingma y M. Welling (2019).
+  #fuente_link("https://arxiv.org/abs/1906.02691", "arXiv:1906.02691")
+]
 
 === Introducción
 Los Variational Autoencoders (VAE) entregan un framework para aprender modelos profundos de variables latentes y los modelos de inferencia correspondientes.
@@ -300,7 +302,7 @@ Finalmente, para optimizar el ELBO se ocupan los gradientes $nabla_(ttheta, pphi
 Por último, el algoritmo estocástico para optimizar el ELBO es
 
 #algot[AEVB][
-  \
+  
   *Data:*
   - $cal(D)$: Dataset.
   - $q_pphia (zz|xx)$: Modelo de inferencia.
@@ -339,13 +341,17 @@ Pero también se podría querer _reconstruir un dato_. Para ello, dado un dato $
 ]
 
 === Glosario
+FUT
+
 - *Inferencia Variacional:*
 - *Estimador de Monte-Carlo:*
 
 #pagebreak()
 == Neural Discrete Representation
-
-El siguiente contenido está basado en el paper "_Neural Discrete Representation_" de Aaron van den Oord, Oriol Vinyals y Koray Kavukcuoglu (2018).
+#notat[Fuente][
+  Contenido estudiado de _"Neural Discrete Representation Learning"_ de A. van den Oord et al. (2017).
+  #fuente_link("https://arxiv.org/abs/1711.00937", "arXiv:1711.00937")
+]
 
 
 VQ-VAE es una familia de modelos que combina VAEs con cuantización de vectores (VQ) para obtener una representación latente discreta. 
@@ -438,7 +444,10 @@ $
 #pagebreak()
 
 == Categorical Reparametrization with Gumbel-Softmax
-Esta sección está basada en el paper "Categorical Reparametrization with Gumbel-Softmax" de Eric Jang, Shixiang Gu y Ben Poole.
+#notat[Fuente][
+  Contenido estudiado de _"Categorical Reparameterization with Gumbel-Softmax"_ de E. Jang et al. (2016).
+  #fuente_link("https://arxiv.org/abs/1611.01144", "arXiv:1611.01144")
+]
 
 El paper presenta un estimador de gradiente eficiente que reemplaza las muestras no diferenciables a partir de una nueva distribución Gumbel-Softmax, la cual puede ser _annealed_ en una distribución categórica.
 

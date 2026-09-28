@@ -7,6 +7,10 @@
 Los dos papers de esta semana intentan obtener lo mejor de dos mundos de síntesis de programas, el enfoque simbólico (o inductivo) y el enfoque neuronal (o transductivo). 
 
 == Searching Latent Program Spaces
+#notat[Fuente][
+  Contenido estudiado de _"Searching Latent Program Spaces"_ de M. V. Macfarlane et al. (2024).
+  #fuente_link("https://arxiv.org/abs/2411.08706", "arXiv:2411.08706")
+]
 
 El paper presenta la arquitectura *Latent Program Network (LPN)* que busca sintetizar programas a partir de pocos ejemplos y ajustarlos en caso de que la primera intuición no alcance. Para ello, toma elementos de dos acercamientos a la resolución de ARC-AGI (que los autores defienden como una buena manera de medir la inteligencia por medir la capacidad de adaptarse a nuevas tareas):
 - *Acercamiento inductivo* / _Síntesis de programas simbólica_: Se produce un programa explícito, pero el espacio de búsqueda es demasiado grande, por lo que requiere un lenguaje de dominio específico (DSL) diseñado a mano que limite las opciones, algo poco escalable a tareas del mundo real. LPN de aquí usa la capacidad de búsqueda durante el momento de prueba.
@@ -40,7 +44,7 @@ El paper menciona que, de no limitar la complejidad de Kolmogorov del programa, 
 
 El proceso de inferencia de LPN ocurre en tres etapas:
 $ \
-  "Encoder" --> "Optimización en el\nespacio latente" --> "Decoder"
+  "Encoder" qquad --> qquad "Optimización en el\nespacio latente" qquad --> qquad "Decoder"
 $
 
 El encoder generará una primera "intuición", la optimización en el espacio latente buscará refinar dicha intuición y el decoder ejecutará el programa refinado sobre el nuevo ejemplo.
@@ -127,12 +131,11 @@ de modo que dicho $z$ sea diferenciable#footnote[¿Porque vamos a diferenciar $c
 
 === Experimentos y Resultados
 
-_PENDIENTE_
+POR
 
 === Limitaciones
 
-_PENDIENTE_
-
+POR
 Se sabe que tienen problemas para generalización composicional.
 
 === Preguntas
@@ -151,6 +154,10 @@ Se sabe que tienen problemas para generalización composicional.
 
 
 == Gradient-Based Program Synthesis with Neurally Interpreted Languages
+#notat[Fuente][
+  Contenido estudiado de _"Gradient-Based Program Synthesis with Neurally Interpreted Languages"_ de M. V. Macfarlane et al. (2026).
+  #fuente_link("https://arxiv.org/abs/2604.18907", "arXiv:2604.18907")
+]
 
 Introducen el concepto de *Latent Adaptation Networks (LANs)*, que son redes con encoder y decoder que aprenden un espacio latente para representar el espacio de modelos (o programas). Una característica esencial es que en test-time se busca en el espacio latente para adaptarse y mejorar los resultados. 
 
@@ -194,4 +201,4 @@ donde
 
 == Diferencias entre ambas investigaciones
 
-_PENDIENTE: MUY IMPORTANTE_
+POR

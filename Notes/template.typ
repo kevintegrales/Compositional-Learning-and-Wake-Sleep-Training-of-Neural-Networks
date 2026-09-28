@@ -18,7 +18,7 @@
   
   // Definiciones de colores
   let dark_color = rgb(principal_color)
-  let gray_color = dark_color.lighten(50%)
+  let gray_color = rgb("BD0065")
   let light_color = rgb(secondary_color)
   let light_gray_color = light_color.darken(20%)
 
@@ -229,7 +229,7 @@
   // Main body.
   set par(
     justify: true, 
-    first-line-indent: 2em, 
+    first-line-indent: 0em, 
     linebreaks: "simple", 
     spacing: 0.6em
   )
@@ -309,8 +309,8 @@
   
   set par(
     linebreaks: "optimized",
-    spacing: .5em,
-    first-line-indent: 1em
+    spacing: 1em,
+    first-line-indent: 0em
   )
   
   // -----------------------------------------------
