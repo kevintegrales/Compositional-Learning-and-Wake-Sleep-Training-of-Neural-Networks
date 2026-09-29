@@ -36,26 +36,28 @@ Por hacer: Domingo]
 #show "TODO": box(fill: yellow, inset: 10pt, width: 100%)[#set align(center)
 Por hacer: Sábado]
 
-= Semana 0
-#include "chapters/ch_w_00.typ"
+= Contenidos Preliminares
+#include "chapters/ch_preliminares.typ"
 
 #pagebreak()
-= Semana 1
-#include "chapters/ch_w_01.typ"
+= Representaciones Latentes
+#include "chapters/ch_discretas.typ"
 
 #pagebreak()
-= Semana 2
-#include "chapters/ch_w_02.typ"
+= Síntesis de Programas
+#include "chapters/ch_sintesis.typ"
 
 #pagebreak()
-= Semana 3
-#include "chapters/ch_w_03.typ"
+= Algoritmos para Redes Neuronales
+#include "chapters/ch_algoritmos.typ"
 
 #pagebreak()
-= Semana 4
-#include "chapters/ch_w_04.typ"
+= Misceláneos
+#include "chapters/ch_miscelaneos.typ"
 
-
+#pagebreak()
+= Apéndice
+#include "chapters/ch_apendix.typ"
 
 //#pagebreak()
 //= Referencias
