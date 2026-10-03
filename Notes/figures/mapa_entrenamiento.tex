@@ -1,0 +1,190 @@
+% Mapa conceptual: cómo se entrena una red neuronal
+% Compilar:  pdflatex mapa_entrenamiento.tex  &&  pdftocairo -svg mapa_entrenamiento.pdf mapa_entrenamiento.svg
+\documentclass[tikz,border=10pt]{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{helvet}
+\usepackage{amsmath,amssymb}
+\renewcommand{\familydefault}{\sfdefault}
+\usetikzlibrary{arrows.meta,positioning,calc,backgrounds,fit}
+
+% ---------- Paleta ----------
+\definecolor{cArch}{HTML}{2E4A62}   % arquitecturas
+\definecolor{cLoc}{HTML}{8E6C00}    % reglas locales
+\definecolor{cGrad}{HTML}{1F5FA8}   % gradiente / backprop
+\definecolor{cObj}{HTML}{0E7C6B}    % objetivos
+\definecolor{cOpt}{HTML}{6B3FA0}    % optimizadores
+\definecolor{cReg}{HTML}{C0392B}    % regularización / planitud
+\definecolor{cAlt}{HTML}{B85C00}    % otras vías
+\definecolor{cEdge}{HTML}{3C3C3C}
+\definecolor{cStar}{HTML}{D4A017}
+
+% ---------- Geometría ----------
+\newcommand{\cx}{6.2}     % separación entre columnas (cm)
+\newcommand{\ry}{1.8}     % separación entre filas (cm)
+
+\tikzset{
+  box/.style={draw=#1, thick, fill=#1!10, rounded corners=3pt,
+              text width=3.75cm, align=center, inner sep=3.5pt,
+              font=\scriptsize, minimum height=1.25cm},
+  key/.style={draw=#1, line width=1.6pt, fill=#1!22, rounded corners=3pt,
+              text width=3.75cm, align=center, inner sep=3.5pt,
+              font=\scriptsize, minimum height=1.25cm},
+  frame/.style={draw=#1!70, thick, dashed, rounded corners=6pt, inner sep=7pt},
+  ftitle/.style={font=\footnotesize\bfseries, text=#1, fill=white, inner sep=2pt},
+  rel/.style={-{Stealth[length=2.3mm]}, cEdge, thick, rounded corners=5pt},
+  con/.style={-{Stealth[length=2.3mm]}, cEdge, thick, dashed, rounded corners=5pt},
+  lbl/.style={font=\tiny\itshape, fill=white, inner sep=1.2pt, text=black!85, align=center},
+  colhead/.style={font=\small\bfseries, text=#1, align=center, text width=4.4cm},
+}
+\newcommand{\st}{\,{\color{cStar}$\bigstar$}}          % relevante para el IPre
+\newcommand{\nd}[3]{\textbf{#1}\\[1pt]{\color{black!70}#2}\\[1pt]{\color{black!55}#3}}
+
+\begin{document}
+\begin{tikzpicture}
+
+% ================= COLUMNA 0: ARQUITECTURAS =================
+\foreach \n/\r/\t in {
+  perc/0/{\nd{Perceptrón}{1 capa, umbral}{Rosenblatt 1958}},
+  adal/1/{\nd{Adaline}{neurona lineal}{Widrow \& Hoff 1960}},
+  hopf/2/{\nd{Red de Hopfield}{memoria asociativa (energía)}{Hopfield 1982}},
+  boltz/3/{\nd{Máquina de Boltzmann / RBM}{generativa estocástica}{Ackley, Hinton \& Sejnowski 1985}},
+  helm/4/{\nd{Máquina de Helmholtz\st}{generativa + red de reconocimiento}{Dayan, Hinton et al.\ 1995}},
+  mlp/5/{\nd{MLP}{perceptrón multicapa}{Rumelhart, Hinton \& Williams 1986}},
+  cnn/6/{\nd{Red convolucional (CNN)}{pesos compartidos, localidad}{LeCun et al.\ 1989}},
+  trf/7/{\nd{Transformer}{atención, residuales}{Vaswani et al.\ 2017}},
+  rnn/8/{\nd{RNN / LSTM}{estado recurrente}{Elman 1990; Hochreiter \& Schmidhuber 1997}},
+  vae/9/{\nd{VAE\st}{latente continuo}{Kingma \& Welling 2013}},
+  disc/10/{\nd{Latentes discretos\st}{VQ-VAE, Dreamer, NLI}{2017--2026}},
+  pol/11/{\nd{Política / agente RL\st}{actor de DreamerV3}{Williams 1992; Hafner 2023}}%
+}{
+  \node[box=cArch] (\n) at (0,-\r*\ry) {\t};
+}
+
+% ================= COLUMNA 1: REGLA DE APRENDIZAJE =================
+% --- reglas locales (sin backprop)
+\node[box=cLoc] (rperc) at (\cx,-0*\ry) {\nd{Regla del perceptrón}{$w \leftarrow w + \eta\,(y-\hat y)\,x$; converge si es separable}{Rosenblatt 1958}};
+\node[box=cLoc] (delta) at (\cx,-1*\ry) {\nd{Regla delta / LMS}{gradiente del error cuadrático en 1 capa}{Widrow \& Hoff 1960}};
+\node[box=cLoc] (hebb)  at (\cx,-2*\ry) {\nd{Aprendizaje hebbiano}{«neuronas que se activan juntas, se conectan»}{Hebb 1949}};
+\node[box=cLoc] (cd)    at (\cx,-3*\ry) {\nd{Divergencia contrastiva}{fase positiva vs.\ negativa (Gibbs)}{Hinton 2002}};
+\node[key=cLoc] (ws)    at (\cx,-4*\ry) {\nd{Algoritmo wake-sleep\st}{wake: ajusta generativo; sleep: sueña y ajusta reconocimiento}{Hinton et al.\ 1995}};
+% --- basadas en gradiente
+\node[key=cGrad] (bp)   at (\cx,-6*\ry) {\nd{Backpropagation}{regla de la cadena en modo reverso: $\nabla_\theta L$ en $O(|\theta|)$}{Linnainmaa 1970; Rumelhart et al.\ 1986}};
+\node[box=cGrad] (bptt) at (\cx,-8*\ry) {\nd{Backprop through time}{desenrollar la recurrencia}{Werbos 1990}};
+\node[box=cGrad] (rep)  at (\cx,-9*\ry) {\nd{Truco de reparametrización\st}{$z=\mu+\sigma\odot\varepsilon$, gradiente por $z$}{Kingma \& Welling 2013}};
+\node[box=cGrad] (gum)  at (\cx,-10*\ry) {\nd{Gumbel-Softmax / straight-through\st}{relajación de lo discreto; ST en VQ}{Bengio 2013; Jang 2017}};
+\node[box=cGrad] (rf)   at (\cx,-11*\ry) {\nd{REINFORCE / policy gradient\st}{$\nabla \mathbb{E}[R]=\mathbb{E}[R\,\nabla\log\pi]$}{Williams 1992}};
+
+% arcos arquitectura -> regla
+\foreach \a/\b/\l in {perc/rperc/{},adal/delta/{},hopf/hebb/{},boltz/cd/{},helm/ws/{},
+                      rnn/bptt/{},vae/rep/{},disc/gum/{},pol/rf/{}} {
+  \draw[rel] (\a) -- (\b);
+}
+\draw[rel] (mlp.east)  -- ++(0.9,0) |- ($(bp.west)+(0,0.3)$);
+\draw[rel] (cnn.east)  -- (bp.west);
+\draw[rel] (trf.east)  -- ++(0.9,0) |- ($(bp.west)+(0,-0.3)$);
+\node[lbl] at ($(cnn.east)!0.5!(bp.west)+(0,1.25)$) {se entrenan con};
+
+% marcos de grupo
+\begin{scope}[on background layer]
+  \node[frame=cLoc,  fit=(rperc)(ws)] (fLoc) {};
+  \node[frame=cGrad, fit=(bp)(rf)]    (fGrad) {};
+\end{scope}
+\node[ftitle=cLoc, anchor=south]  at (fLoc.north)  {Reglas locales (sin backprop global)};
+\node[ftitle=cGrad, anchor=north] at ($(fGrad.north)+(0,0.05)$) {Gradiente con backprop};
+
+% relaciones internas
+\draw[con] (delta.east) -- (\cx+2.5,-1*\ry) -- node[lbl,pos=0.82] {generaliza\\a multicapa} (\cx+2.5,-6*\ry+0.3) -- ($(bp.east)+(0,0.3)$);
+\draw[rel] (bp) -- node[lbl,right=2pt] {caso recurrente} (bptt);
+
+% ================= COLUMNA 2: OBJETIVO + OPTIMIZADOR =================
+\node[box=cObj] (sup)  at (2*\cx,-0*\ry) {\nd{Supervisado}{MSE, entropía cruzada}{clasificación, regresión}};
+\node[box=cObj] (uns)  at (2*\cx,-1*\ry) {\nd{No supervisado / generativo\st}{verosimilitud, ELBO, reconstrucción}{VAE, Boltzmann, Helmholtz}};
+\node[box=cObj] (rl)   at (2*\cx,-2*\ry) {\nd{Refuerzo\st}{retorno esperado $\mathbb{E}[\sum\gamma^t r_t]$}{Sutton \& Barto}};
+\node[box=cObj] (ssl)  at (2*\cx,-3*\ry) {\nd{Auto-supervisado}{predecir el siguiente token / partes enmascaradas}{GPT, BERT}};
+
+\node[box=cOpt] (gd)   at (2*\cx,-5*\ry) {\nd{Descenso de gradiente}{$\theta\leftarrow\theta-\eta\nabla L$ (lote completo)}{Cauchy 1847}};
+\node[key=cOpt] (sgd)  at (2*\cx,-6*\ry) {\nd{SGD / mini-batch}{gradiente ruidoso con muestras}{Robbins \& Monro 1951}};
+\node[box=cOpt] (mom)  at (2*\cx,-7*\ry) {\nd{Momentum / Nesterov}{inercia sobre el gradiente}{Polyak 1964; Nesterov 1983}};
+\node[box=cOpt] (ada)  at (2*\cx,-8*\ry) {\nd{AdaGrad / RMSProp / Adam(W)}{paso adaptativo por coordenada}{2011 / 2012 / 2014 / 2017}};
+\node[box=cOpt] (newt) at (2*\cx,-9*\ry) {\nd{Newton / Gauss-Newton / LM}{usa el Hessiano (curvatura)}{2.º orden}};
+\node[box=cOpt] (lbfgs)at (2*\cx,-10*\ry) {\nd{L-BFGS}{Hessiano aproximado con memoria}{Liu \& Nocedal 1989}};
+\node[box=cOpt] (nat)  at (2*\cx,-11*\ry) {\nd{Gradiente natural / K-FAC}{métrica de Fisher}{Amari 1998; Martens 2015}};
+
+\draw[rel] (gd) -- node[lbl,right=2pt] {estocástico} (sgd);
+\draw[rel] (sgd) -- node[lbl,right=2pt] {+ inercia} (mom);
+\draw[rel] (mom) -- node[lbl,right=2pt] {+ escala adaptativa} (ada);
+\draw[rel] (newt) -- node[lbl,right=2pt] {aproximar $H^{-1}$} (lbfgs);
+\draw[rel] (newt.west) to[out=200,in=160] node[lbl,left] {$H\to$ Fisher} (nat.west);
+
+\begin{scope}[on background layer]
+  \node[frame=cObj, fit=(sup)(ssl)] (fObj) {};
+  \node[frame=cOpt, fit=(gd)(nat)]  (fOpt) {};
+\end{scope}
+\node[ftitle=cObj, anchor=south] at (fObj.north) {Objetivo: qué es $L(\theta)$};
+\node[ftitle=cOpt, anchor=north] at ($(fOpt.north)+(0,0.05)$) {Optimizador: regla de actualización};
+
+% enlaces entre bloques
+\draw[rel, line width=1.2pt] (fGrad.east |- 0,-7.5*\ry) -- node[lbl,above=2pt] {$\nabla_\theta L$} (fOpt.west |- 0,-7.5*\ry);
+\draw[rel] (fObj.west |- ssl) -- (2*\cx-2.75,-3*\ry) -- node[lbl,pos=0.5] {define\\$L(\theta)$} (2*\cx-2.75,-5.55*\ry) -- (fGrad.east |- 0,-5.55*\ry);
+
+% ================= COLUMNA 3: REGULARIZACIÓN Y PLANITUD =================
+\node[box=cReg] (wd)   at (3*\cx,-0*\ry) {\nd{Weight decay / L2}{penaliza $\|\theta\|^2$}{Krogh \& Hertz 1992}};
+\node[box=cReg] (es)   at (3*\cx,-1*\ry) {\nd{Early stopping / dropout}{parar a tiempo; apagar neuronas al azar}{Srivastava et al.\ 2014}};
+\node[box=cReg] (bay)  at (3*\cx,-2*\ry) {\nd{Redes bayesianas / Laplace}{prior sobre pesos, evidencia}{MacKay 1992}};
+\node[box=cReg] (mdlw) at (3*\cx,-3.2*\ry) {\nd{MDL de los pesos\st}{pesos ruidosos = pocos bits}{Hinton \& van Camp 1993}};
+\node[box=cReg] (noise)at (3*\cx,-6*\ry) {\nd{Ruido de SGD\st}{lotes pequeños prefieren mínimos planos}{Keskar et al.\ 2017}};
+\node[box=cReg] (obs)  at (3*\cx,-7*\ry) {\nd{OBD / OBS}{podar pesos según el Hessiano}{LeCun 1990; Hassibi \& Stork 1993}};
+\node[key=cReg, minimum height=1.6cm] (fms) at (3*\cx,-8.6*\ry) {\nd{\normalsize Flat Minimum Search\st}{busca una caja grande en el espacio de pesos con error casi constante; regularizador calculado con backprop + info de 2.º orden en $O(|\theta|)$}{Hochreiter \& Schmidhuber 1997}};
+\node[box=cReg] (sam)  at (3*\cx,-10.3*\ry) {\nd{SAM}{$\min_\theta \max_{\|\epsilon\|\le\rho} L(\theta+\epsilon)$}{Foret et al.\ 2021}};
+\node[box=cReg] (swa)  at (3*\cx,-11.3*\ry) {\nd{SWA / promediado de pesos}{promediar la trayectoria de SGD}{Izmailov et al.\ 2018}};
+
+\draw[con] (wd.east) to[out=-30,in=30] node[lbl,right] {L2 = prior\\gaussiano} (bay.east);
+\draw[rel] (bay) -- node[lbl,right=2pt] {$-\log$ posterior $\approx$ MDL} (mdlw);
+\draw[rel] (mdlw.east) -- (3*\cx+2.55,-3.2*\ry) -- node[lbl,pos=0.62] {mínimo plano\\$\Rightarrow$ menos bits\\(argumento\\MDL)} (3*\cx+2.55,-8.6*\ry) -- (fms.east);
+\draw[con] (swa.east) -- (3*\cx+2.25,-11.3*\ry) -- node[lbl,pos=0.5,right] {también\\favorece\\lo plano} (3*\cx+2.25,-9.0*\ry) -- ($(fms.east)+(0,-0.7)$);
+\draw[con] (noise.west) to[out=200,in=160] node[lbl,left,pos=0.5] {mismo\\sesgo\\implícito} (fms.west);
+\draw[rel] (obs) -- node[lbl,right=2pt] {usa curvatura} (fms);
+\draw[rel] (fms) -- node[lbl,right=2pt] {versión moderna (vecindad)} (sam);
+\draw[con] (sgd.east) -- (noise.west);
+
+\begin{scope}[on background layer]
+  \node[frame=cReg, fit=(wd)(swa)] (fReg) {};
+\end{scope}
+\node[ftitle=cReg, anchor=south] at (fReg.north) {Regularización y planitud del mínimo};
+\draw[con, line width=1.1pt] (fOpt.east |- 0,-9.6*\ry) -- node[lbl,above=2pt] {se suma a la pérdida /\\modifica el paso} (fReg.west |- 0,-9.6*\ry);
+
+% ================= COLUMNA 4: OTRAS VÍAS =================
+\node[box=cAlt] (evo)  at (4*\cx,-0*\ry) {\nd{Neuroevolución}{algoritmos genéticos, ES, NEAT (sin gradiente)}{Stanley 2002; Salimans 2017}};
+\node[box=cAlt] (mcmc) at (4*\cx,-2*\ry) {\nd{Muestreo MCMC\st}{Gibbs, Langevin: muestrear la posterior de pesos}{Neal 1996; Welling \& Teh 2011}};
+\node[box=cAlt] (dcd)  at (4*\cx,-4*\ry) {\nd{Búsqueda + compresión\st}{DreamCoder: wake-sleep sobre programas y biblioteca}{Ellis et al.\ 2021}};
+\node[box=cAlt] (ttt)  at (4*\cx,-6*\ry) {\nd{Optimización en tiempo de test\st}{ascenso de gradiente en el latente $z$ (LPN, NLI)}{Macfarlane \& Bonnet 2024--26}};
+\node[box=cAlt] (wm)   at (4*\cx,-8*\ry) {\nd{Entrenar en la imaginación\st}{world model + actor-crítico en sueños}{Hafner et al.\ (Dreamer) 2023}};
+
+\draw[rel] (bay) -- node[lbl,below=2pt] {muestrear en vez\\de optimizar} (mcmc);
+\draw[con] (ws.east) -- node[lbl,pos=0.62] {wake-sleep aplicado a síntesis de programas} (dcd.west);
+\draw[con] (ttt.south) -- node[lbl,right=2pt] {} (wm.north);
+
+\begin{scope}[on background layer]
+  \node[frame=cAlt, fit=(evo)(wm)] (fAlt) {};
+\end{scope}
+\node[ftitle=cAlt, anchor=south] at (fAlt.north) {Otras vías y variantes};
+
+% ================= ENCABEZADOS, TÍTULO Y LEYENDA =================
+\node[colhead=cArch] at (0,2.35)       {¿Qué se entrena?\\[-1pt]{\scriptsize\normalfont arquitectura}};
+\node[colhead=cGrad] at (\cx,2.35)     {¿Cómo se calcula\\[-1pt]la actualización?};
+\node[colhead=cOpt]  at (2*\cx,2.35)   {¿Qué se minimiza\\[-1pt]y cómo se avanza?};
+\node[colhead=cReg]  at (3*\cx,2.35)   {¿Qué mínimo\\[-1pt]se prefiere?};
+\node[colhead=cAlt]  at (4*\cx,2.35)   {Más allá del\\[-1pt]descenso de gradiente};
+
+\node[font=\Large\bfseries, anchor=west] at (-2.1,3.9) {¿Cómo se entrena una red neuronal? — Mapa de métodos};
+\begin{scope}[shift={(15.2,3.9)}]
+  \node[box=cGrad, text width=1.9cm, minimum height=0.55cm, font=\tiny] (k1) at (0,0) {método};
+  \node[key=cGrad, text width=1.9cm, minimum height=0.55cm, font=\tiny, right=0.3cm of k1] (k2) {pieza clave};
+  \node[font=\scriptsize, right=0.3cm of k2] (k3) {{\color{cStar}$\bigstar$} = aparece en el IPre};
+  \draw[rel] ($(k3.east)+(0.4,0)$) -- ++(1.1,0) node[right,font=\scriptsize] {se entrena con / deriva en};
+  \draw[con] ($(k3.east)+(4.9,0)$) -- ++(1.1,0) node[right,font=\scriptsize] {relación conceptual};
+\end{scope}
+
+\end{tikzpicture}
+\end{document}

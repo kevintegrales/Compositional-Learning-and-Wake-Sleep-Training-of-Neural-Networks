@@ -57,6 +57,7 @@ Por hacer: Sábado]
 
 #pagebreak()
 = Apéndice
+<apendice>
 #include "chapters/ch_apendix.typ"
 
 //#pagebreak()

@@ -283,9 +283,9 @@ Un conjunto $A subset.eq NN$ es *computablemente enumerable* (c.e.) si es vacío
 
 
 
-
+#pagebreak()
 == Minimum Description Length (MDL)
-
+<mdl>
 
 _El material de este capítulo está inspirado en las notas Aprendizaje Composicional y Generalización OOD de MAT2320 que me compartió el profesor Petrache_.
 
@@ -320,6 +320,11 @@ El teorema de invarianza indica que la complejidad de un $x$ _esencialmente_ no 
 Otro teorema interesante.
 #teo[La función $x |-> K(x)$ es no computable.]
 
+Este teorema, en nuestro enfoque, implica que, como $K(x)$ no es computable, en general no podamos asegurar haber encontrado la representación óptima de $x$, puesto que cualquier método computable entregará un largo para el que, en algunos casos, $K(x)$ será menor (si no, $K$ sería computable).
+
+
+
+
 Ahora presentamos una aplicación práctica de la complejidad de Kolmogorov.
 
 #deft[Minimum Description Length (MDL)][
@@ -330,8 +335,25 @@ Ahora presentamos una aplicación práctica de la complejidad de Kolmogorov.
   donde $L(h)$ es la longitud en bits de la descripción de $h$ y $L(D|h)$ es la longitud de la descripción de $D$ dado $h$.
 ]
 
+El MDL, esencialmente, formaliza la navaja de Occam, indicando que el criterio para escoger una hipótesis consiste en elegir aquella que minimiza la longitud de la hipótesis sumada a la de los datos codificados/descritos desde nuestra hipótesis:
+- Una hipótesis muy simple, tiene $L(h)$ pequeño, pero $L(D|h)$ grande.
+- Una hipótesis muy compleja, tiene $L(h)$ grande, pero $L(D|h)$ pequeño (en caso de que sea sobreajustada).
 
 
+
+#nota[El MDL descrito anteriormente se conoce como MDL "crudo" o "de dos partes". Existe otro MDL, llamado "refinado", que utiliza códigos universales en vez de dos longitudes por separado. ]
+
+
+#pagebreak()
+== Backpropagation
+<backprop>
+Backpropagation es un algoritmo para calcular gradientes de manera eficiente. 
+
+
+
+#pagebreak()
+== Aprendizaje Bayesiano
+FUT
 
 #pagebreak()
 #let xx = $bold(x)$

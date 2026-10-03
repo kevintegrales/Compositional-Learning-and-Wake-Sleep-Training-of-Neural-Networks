@@ -19,3 +19,11 @@
 #let Normal(aa, bb) = $"Normal"(aa, bb)$
 
 FUT
+
+#move(dy: 200pt)[
+  #rotate(90deg)[
+    #figure(caption: [Mapa de lecturas])[
+      #image("../mapa_papers.svg", width: 150%)
+    ]
+  ]
+]
