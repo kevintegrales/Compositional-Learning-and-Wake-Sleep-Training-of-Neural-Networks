@@ -666,7 +666,8 @@ $
 
 Para esto, usaremos el _truco de reparametrización_.
 
-==== Reparametrization Trick
+==== Reparameterization Trick
+<reparameterization>
 
 Expresaremos $zz ~ q_pphia (zz|xx)$ como una transformación $g$ diferenciable e invertible de otra va $eeps$, independiente de $xx$ y de $pphia$, y con densidad $p(eeps)$:
 $
@@ -771,4 +772,4 @@ Pero también se podría querer _reconstruir un dato_. Para ello, dado un dato $
 FUT
 
 - *Inferencia Variacional:*
-- *Estimador de Monte-Carlo:*
+- *Estimador simple de Monte-Carlo:* es una manera de estimar, de manera insesgada, la esperanza de alguna cantidad aproximándola con el promedio de muestras aleatorias: $ EE_(z tilde q_phia (z)) [f(z)] tilde.eq 1/L sum_(k=1)^L f(z^((l))), qquad "donde cada" z^((l)) tilde q_phia (z). $
