@@ -20,10 +20,21 @@
 
 FUT
 
-#move(dy: 200pt)[
+== Relaciones entre Papers
+#move(dy: 170pt)[
   #rotate(90deg)[
     #figure(caption: [Mapa de lecturas])[
-      #image("../mapa_papers.svg", width: 150%)
+      #image("../figures/mapa_papers.svg", width: 150%)
+    ]
+  ]
+]
+#pagebreak()
+== Métodos para Entrenar una Red Neuronal
+<metodos_para_entrenar_red_neuronal>
+#move(dy: 80pt)[
+  #rotate(90deg)[
+    #figure(caption: [Mapa de lecturas])[
+      #image("../figures/mapa_entrenamiento.svg", width: 150%)
     ]
   ]
 ]

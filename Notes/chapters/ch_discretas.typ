@@ -111,7 +111,7 @@ $
 
 #pagebreak()
 
-== Categorical Reparametrization with Gumbel-Softmax
+== Categorical Reparameterization with Gumbel-Softmax
 #notat[Fuente][
   Contenido estudiado de _"Categorical Reparameterization with Gumbel-Softmax"_ de E. Jang et al. (2016).
   #fuente_link("https://arxiv.org/abs/1611.01144", "arXiv:1611.01144")

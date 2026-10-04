@@ -347,13 +347,87 @@ El MDL, esencialmente, formaliza la navaja de Occam, indicando que el criterio p
 #pagebreak()
 == Backpropagation
 <backprop>
-Backpropagation es un algoritmo para calcular gradientes de manera eficiente. 
 
+FUT
+
+Backpropagation es un algoritmo para calcular gradientes de manera eficiente y se suele ocupar para entrenar redes neuronales, parametrizadas por $f(x; w)$, donde $w$ son los pesos, pues muchas veces se encuentran los pesos usando descenso de gradiente sobre el error $E(w)$ (que suele depender de una función de pérdia $cal(l)(x; w)$), iterando
+$
+  w <- w - eta gradient_w E(w),
+$
+donde $eta > 0$ es el *learning rate*.
+
+El Backpropagation es una aplicación de programación dinámica.
+
+#nota[En el Apéndice, en @metodos_para_entrenar_red_neuronal,
+ se encuentra un mapa conceptual que muestra más métodos con los que se puede entrenar una red neuronal.]
 
 
 #pagebreak()
-== Aprendizaje Bayesiano
-FUT
+== Conceptos Bayesianos
+
+
+A lo largo de diversas investigaciones se usan conceptos bayesianos, como prior y posterior, por lo que consideré importante repasarlos como una base para el aprendizaje composicional.
+
+Sea $bold(z)$ una cantidad desconocida (como podría una variable latente o un programa) y sea $bold(x)$ un dato. El teorema de Bayes establece una igualdad para la distribución condicional de $bold(z)|bold(x)$:
+
+#block(width: 100%)[
+  #set math.equation(numbering: "(1)")
+  $
+    p(bold(z)|bold(x)) = (p(bold(x)|bold(z)) p(bold(z)))/(p(bold(x))),
+  $ <eq_bayes>
+  donde: 
+  - $p(bold(z)|bold(x))$ es lo que se conoce como *posterior*. 
+    Corresponde a, dado los datos, qué tan probable creemos que es cierto valor de $bold(z)$ (o, más rigurosamente, cierto rango de valores).
+  - $p(bold(x)|bold(z))$ es la *verosimilitud*. 
+    Corresponde a qué tan probable es el dato que se tiene asumiendo cierto valor de $bold(z)$.
+  - $p(bold(z))$ es la *prior*. 
+    Corresponde a la distribución, previo a la experiencia, esto es, previo a tener $bold(x)$, que creemos que tienen los valores de $bold(z)$. Cuando no tenemos una creencia previa para $bold(z)$, se deja como una uniforme.
+  - $p(bold(x))$ es la *evidencia*. 
+    Corresponde a la distribución que creemos que tienen los datos.
+]
+
+#notat[La posterior es una mezcla][
+  Observa cómo es que en la ecuación @eq_bayes $p(bold(z)|bold(x)) proport p(bold(x)|bold(z)) p(bold(z))$, así que la posterior es una mezcla de lo que creíamos que valdría $bold(z)$ (con la prior) y la información que nos entregó $bold(x)$. 
+]
+
+#notat[Relación con el _posterior collapse_][
+  En caso de que $bold(x)$ no nos informe nada en nuestro modelo, la posterior y la prior se vuelven idénticas, que es justo el caso del _posterior collapse_. De hecho, en ese caso, $p(bold(x)|bold(z)) = p(bold(x))$ y $bold(x)$ y $bold(z)$ se vuelven independientes.
+]
+
+Muchas veces convendrá además tener en mente el modelo generativo, que aprovecha la siguiente igualdad:
+$
+  p(bold(x), bold(z)) = p(bold(z)) p_theta (bold(x)|bold(z)),
+$
+donde $theta$ es un parámetro del modelo generativo. Se entiende como que:
+1. Se muestrea un $bold(z) ~ p(bold(z))$.
+2. Se genera un $bold(x) ~ p_theta (bold(x)|bold(z))$.
+
+A partir de esta ecuación, se obtiene que
+$
+  p(bold(x)) =^"distribución\nmarginal" integral p(bold(x), bold(z)) dif bold(z) = integral p(bold(z)) p_theta (bold(x)|bold(z)) dif bold(z).
+$
+Por lo tanto, la distribución de los datos no depende de $bold(z).$ 
+
+
+=== Aplicación de la Prior y la Posterior
+
+El método de *Estimadores Máximo-Verosímiles* (EMV, o MLE en inglés) se escoge aquel $hat(bold(z))_"EMV"$ tal que
+$
+  hat(bold(z))_"EMV" = arg max_z p(bold(x)|bold(z)) = arg max_z [log p(bold(x)|bold(z))],
+$
+es decir, aquel que maximiza la verosimilitud de los datos observados.
+
+Un método similar es *máximo a posteriori* (MAP, _Maximum A Posteriori_), que consiste en escoger aquel $hat(bold(z))_"MAP"$ tal que
+$
+  hat(bold(z))_"MAP" = arg max_z [log p(bold(x)|bold(z)) + log p(bold(z))],
+$
+esto es, es similar al EMV, sólo que también considera la creencia que tenemos sobre los $bold(z)$ previo a la experiencia. (Si $p(bold(z))$ es uniforme, el método se convierte en MLE.) 
+
+
+
+
+
+
 
 #pagebreak()
 #let xx = $bold(x)$
