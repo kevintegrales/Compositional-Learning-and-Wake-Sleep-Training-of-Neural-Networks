@@ -263,62 +263,17 @@ con $xi_i^2$ los valores propios de la covarianza de los datos: si hay demasiado
 - La caracterización vale más allá de los VAEs (p. ej., PPCA).
 - Proponen el *LIDVAE*, que usa mapeos de Brenier para tener una verosimilitud inyectiva en $zz$ y así no colapsar.
 
-#notat[VQ-VAE y colapso][
-  Con prior uniforme la KL es constante ($log K$): ya no se empuja $q_phia (zz|xx)$ hacia la prior, lo que *evita el colapso*.
+== VQ-VAE: ¿Evita el Colapso Posterior?
+
+Con posterior one-hot y prior uniforme sobre $K$ códigos, la KL de la ELBO es constante:
+$
+  D_"KL" (q(z|x) || p(z)) = sum_(k=1)^K q(z = k|x) log (q(z = k|x)) / (1 slash K) = 1 dot log 1 / (1 slash K) = log K,
+$
+así que su gradiente respecto a los parámetros es nulo.
+
+#rel[VQ-VAE sólo evita una parte del colapso][
+  Al ser constante, la KL ya *no empuja* $q_phia (zz|xx)$ hacia la prior durante la maximización de la ELBO. Eso elimina la causa del colapso que proviene de la KL, pero no las demás: por ejemplo, un decoder capaz de ignorar $zz$ (no-identificabilidad) o datos con demasiado ruido.
 ]
-
-// -----------------------------------------------
-// Preguntas 2, 3 y 4 (posterior collapse)
-// -----------------------------------------------
-
-== Pregunta 2: Ejemplos de Posterior Collapse
-
-#pregunta(2)[Ejemplos pequeños e intuición][
-  Construye uno o más ejemplos *pequeños* (pocas dimensiones, calculables a mano) de modelos de variable latente en los que ocurra colapso posterior, y explica *intuitivamente* por qué ocurre en cada uno.
-]
-
-#guia[
-  - ¿Qué pasa si el decoder $p_theta (xx|zz)$ es tan expresivo que puede modelar $xx$ sin mirar $zz$?
-  - ¿Qué pasa si los datos tienen mucho ruido respecto a su estructura? (Criterio $sigma'^2 > max xi_i^2$.)
-  - Usando la caracterización de Wang et al.: ¿qué modelo concreto hace que $p(xx|zz; hat(theta))$ *no dependa* de $zz$?
-  - Para cada ejemplo, ¿qué partes del latente colapsan: todo $zz$ o sólo algunas coordenadas?
-]
-
-== Pregunta 2: Propuesta de Respuesta
-#respuesta()[]
-
-== Pregunta 3: VQ-VAE y Posterior Collapse
-
-#pregunta(3)[Casos donde falla VQ-VAE][
-  Se dice que VQ-VAE *evita* el colapso posterior. ¿En qué casos un VQ-VAE igualmente termina ignorando (todo o parte de) su espacio latente?
-]
-
-#guia[
-  - ¿Qué ocurre si sólo unos pocos vectores $e_k$ del codebook se usan y el resto nunca se activa (_codebook collapse_ o códigos muertos)?
-  - ¿Qué ocurre si el decoder es autorregresivo y muy potente (PixelCNN, WaveNet)?
-  - ¿Qué rol juegan $beta$ y la inicialización del codebook?
-  - ¿Es ese fenómeno *lo mismo* que el colapso posterior según la definición $q(zz|xx) = p(zz)$? ¿O es otro tipo de colapso?
-]
-
-== Pregunta 3: Propuesta de Respuesta
-#respuesta()
-
-== Pregunta 4: ¿Por qué Deja de Importar la KL?
-
-#pregunta(4)[Fórmula y teoría][
-  + Muestra con una *fórmula* por qué, en VQ-VAE, la divergencia KL deja de influir en el entrenamiento.
-  + Explica *teóricamente y a fondo* (no sólo conceptualmente) por qué ocurre, y por qué en un VAE gaussiano la KL sí empuja hacia el colapso.
-]
-
-#guia[
-  - Calcula $D_"KL" (q(z|x) || p(z))$ con $q(z|x)$ one-hot y $p(z)$ uniforme sobre $K$ clases. ¿De qué parámetros depende? ¿Cuál es su gradiente?
-  - En un VAE gaussiano, ¿cuál es el mínimo de $D_"KL" (q_phia (zz|xx) || p(zz))$ y cuándo se alcanza? ¿Qué le "cuesta" al modelo usar $zz$?
-  - Punto de partida sugerido: promediando sobre los datos, $EE_xx [D_"KL" (q(zz|xx) || p(zz))]$ se descompone en una *información mutua* $I_q (xx; zz)$ más una KL entre la posterior agregada $q(zz)$ y la prior. Demuéstralo e interprétalo.
-  - Si la KL es constante, ¿cuánta información sobre $xx$ puede transportar $zz$ como máximo?
-]
-
-== Pregunta 4: Propuesta de Respuesta
-#respuesta()
 
 // ===============================================
 = Síntesis de Programas
@@ -537,21 +492,23 @@ $
   El pensamiento humano funciona en "bloques": razonamos secuencialmente componiendo _ideas_ aisladas, algo que las representaciones discretas simbolizan mejor que los espacios latentes continuos.
 ]
 
-== Pregunta 6: ¿NLI en un Espacio Continuo?
+== ¿Por qué no un NLI con Espacio Latente Continuo?
 
-#pregunta(6)[NLI continuo y composicional][
-  ¿Por qué NLI *no* podría adaptarse a un espacio latente continuo manteniendo la composicionalidad?
+#columnas(proporcion: (1fr, 1fr))[
+  #rel[No se prioriza un vocabulario][
+    Tokens continuos similares o idénticos no se pueden distinguir: no hay un conjunto finito de "palabras" que reutilizar, y $cal(L)_"reg"$ pierde su sentido.
+  ]
+][
+  #rel[Se acumulan errores][
+    Al evaluar en el intérprete, cada paso recibe una instrucción imprecisa y el error se propaga y crece a lo largo de los $T$ pasos.
+  ]
 ]
 
-#guia[
-  - ¿Qué piezas de NLI dependen de que los tokens sean discretos: $cal(L)_"reg"$, el intérprete que lee token a token, el largo variable?
-  - ¿Qué significaría "reutilizar un token" si los tokens fueran vectores continuos? ¿Seguiría teniendo sentido $cal(L)_"reg"$?
-  - Una *secuencia* de vectores continuos (sin cuantizar): ¿qué impide que dos "tokens" cercanos se mezclen o signifiquen cosas distintas?
-  - ¿La pregunta es "no se podría" o "sería más difícil"? Compáralo con LPN, que es justamente el caso continuo.
+#rel[Más sobreajuste][
+  El espacio de búsqueda sería mucho más flexible: en test-time sería más fácil encontrar un programa que calce con los pocos ejemplos sin capturar la regla que los generó.
 ]
 
-== Pregunta 6: Propuesta de Respuesta
-#respuesta()
+#nota[LPN es justamente el caso continuo: compone 2 operaciones, pero falla con 3.]
 
 // ===============================================
 = Algoritmos para Redes Neuronales
@@ -627,62 +584,29 @@ Los retornos se normalizan con $S = "EMA"("Per"(R^lambda_t, 95) - "Per"(R^lambda
   Primer algoritmo en conseguir diamantes en Minecraft sin datos humanos, con hiperparámetros fijos entre dominios. Más parámetros $=>$ mejor rendimiento y menos datos.
 ]
 
-== Pregunta 1: DreamerV3 y Latentes Discretos
-
-#pregunta(1)[¿Por qué mejora con latentes discretos?][
-  En el modelo de mundo de DreamerV3 (heredado de DreamerV2), las representaciones $z_t$ son *discretas*: vectores de variables categóricas entrenadas con gradientes _straight-through_. ¿Qué es lo que hace que un modelo de mundo con latentes discretos funcione mejor que uno con latentes gaussianos continuos?
-]
-
-#guia[
-  - Verifica en el paper cómo es exactamente $z_t$ (número de categóricas y de clases) y cómo se le pasan gradientes.
-  - ¿Qué ventaja tiene una categórica para representar transiciones *multimodales* o saltos bruscos del ambiente?
-  - ¿Cómo afecta al predictor $p_phia (hat(z)_t|h_t)$, que debe "adivinar" $z_t$ sin ver $x_t$?
-  - ¿Se conecta con lo que vimos de Gumbel-Softmax, VQ-VAE y NLI?
-]
-
-== Pregunta 1: Propuesta de Respuesta
-#respuesta()
-
 // ===============================================
 = Síntesis: Aprendizaje Composicional
 // ===============================================
 
-== Pregunta 5: Comparación de los Modelos
+== Principios del Aprendizaje Composicional
 
-#pregunta(5)[Ventajas, fenómenos y principios][
-  Para los modelos de wake-sleep (DreamCoder, DreamerV3) y para LPN y NLI, anota:
-  + sus *ventajas*;
-  + los *fenómenos a tener en cuenta*: el posterior collapse y su rol, y el rol de pasar a representaciones discretas;
-  + los *principios más importantes* que comparten (3 o 4 interesantes).
-]
-
-#guia[
-  - ¿Dónde hay un espacio latente o una distribución posterior en cada modelo? ¿Podría colapsar?
-  - ¿Qué es "discreto" en cada uno? (Programas simbólicos, latentes categóricos, tokens, un vector continuo.)
-  - Posibles ejes para los principios: compresión/MDL, búsqueda en test-time, datos "soñados", reutilización.
-]
-
-== Pregunta 5: Ventajas y Fenómenos
-
-#table(
-  columns: (auto, 1fr, 1fr, 1fr),
-  rows: (auto, 62pt, 62pt, 62pt, 62pt),
-  align: (left + horizon, left, left, left),
-  table.header([*Modelo*], [*Ventajas*], [*Posterior collapse*], [*Rol de lo discreto*]),
-  [*DreamCoder*], [], [], [],
-  [*DreamerV3*], [], [], [],
-  [*LPN*], [], [], [],
-  [*NLI*], [], [], [],
+#grid(
+  columns: (1fr, 1fr),
+  column-gutter: 20pt,
+  row-gutter: 10pt,
+  rel[1\. Lo simple generaliza mejor (MDL)][
+    Una descripción corta no alcanza a memorizar el ruido: para comprimir debe capturar la regularidad real de los datos, que es la que se repite en datos nuevos. _DreamCoder, Flat Minima._
+  ],
+  rel[2\. Aprender de la imaginación][
+    Se entrena con experiencia generada por el propio modelo: trayectorias imaginadas en el modelo de mundo (_DreamerV3_) y fantasías muestreadas de la librería (_DreamCoder_).
+  ],
+  rel[3\. Intuición rápida y luego refinamiento][
+    El encoder propone un programa en una pasada (Sistema 1) y la búsqueda en test-time lo refina (Sistema 2). _LPN, NLI._
+  ],
+  rel[4\. Piezas discretas reutilizables][
+    Los programas se arman con un vocabulario finito que se reutiliza y compone: la librería de _DreamCoder_ y el codebook de tokens de _NLI_.
+  ],
 )
-
-== Pregunta 5: Principios Más Importantes
-
-#respuesta[
-  + *Principio 1:*
-  + *Principio 2:*
-  + *Principio 3:*
-  + *Principio 4:*
-]
 
 // ===============================================
 = Apéndice
