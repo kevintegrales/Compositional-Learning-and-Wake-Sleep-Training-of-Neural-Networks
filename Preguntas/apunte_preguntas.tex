@@ -1,0 +1,466 @@
+% !TEX program = xelatex
+% Compila con XeLaTeX o LuaLaTeX (recomendado) o con pdfLaTeX.
+\documentclass[11pt,a4paper]{article}
+
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[utf8]{inputenc}
+  \usepackage[T1]{fontenc}
+  \IfFileExists{lmodern.sty}{\usepackage{lmodern}}{}
+\else
+  \usepackage{fontspec}
+\fi
+\IfFileExists{spanish.ldf}
+  {\usepackage[spanish,es-noshorthands]{babel}}
+  {\usepackage{babel}\babelprovide[import,main]{spanish}}
+\usepackage{geometry}
+\geometry{margin=2.3cm,top=2.3cm,bottom=2.3cm}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{booktabs,array,tabularx}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage[most]{tcolorbox}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+
+% ---------- Colores (mismos que tu apunte de Flat Minima) ----------
+\definecolor{azul}{RGB}{30,60,120}
+\definecolor{grisclaro}{RGB}{245,245,250}
+\definecolor{verdecorado}{RGB}{60,120,90}
+\definecolor{naranja}{RGB}{220,120,30}
+\definecolor{rojo}{RGB}{170,40,40}
+\definecolor{morado}{RGB}{100,60,140}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{black!55}IPre Sueño-Vigilia y Compositional Learning}
+\fancyhead[R]{\small\color{black!55}Apunte de preguntas}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\setlength{\headheight}{14pt}
+
+% ---------- Recuadros ----------
+\newtcolorbox{enunciado}[1]{enhanced,breakable,colback=azul!6,colframe=azul,
+  fonttitle=\bfseries,title={#1}}
+\newtcolorbox{definicion}[1][]{enhanced,breakable,colback=grisclaro,colframe=verdecorado,
+  fonttitle=\bfseries,title={Contenido: #1}}
+\newtcolorbox{herramienta}[1][]{enhanced,breakable,colback=white,colframe=azul,
+  fonttitle=\bfseries,title={Herramienta: #1}}
+\newtcolorbox{evidencia}[1][]{enhanced,breakable,colback=grisclaro,colframe=naranja,
+  fonttitle=\bfseries,title={Evidencia de los papers: #1}}
+\newtcolorbox{cuidado}[1][]{enhanced,breakable,colback=rojo!4,colframe=rojo,
+  fonttitle=\bfseries,title={Cuidado: #1}}
+\newtcolorbox{guia}[1][Preguntas guía]{enhanced,breakable,colback=morado!4,colframe=morado,
+  fonttitle=\bfseries,title={#1}}
+
+\newcommand{\KL}{D_{\mathrm{KL}}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathcal{N}}
+\newcommand{\sg}{\operatorname{sg}}
+\newcommand{\fuente}[1]{\par\smallskip{\small\color{black!60}\textit{Fuente:} #1}\par}
+
+\setlist[enumerate]{itemsep=3pt,topsep=4pt}
+\setlist[itemize]{itemsep=2pt,topsep=3pt}
+
+\begin{document}
+
+% =====================================================================
+\begin{center}
+{\color{azul}\rule{\textwidth}{1.5pt}}\\[0.4cm]
+{\LARGE\bfseries\color{azul} Las seis preguntas de la presentación}\\[0.2cm]
+{\large Contenido necesario y preguntas guía para llegar a la respuesta}\\[0.2cm]
+{\small IPre Sueño-Vigilia y Compositional Learning (IMT2985, 2026-2) \textbar\ Kevin Cardemil Ulloa}\\[0.2cm]
+{\color{azul}\rule{\textwidth}{1.5pt}}
+\end{center}
+
+\subsection*{Cómo usar este apunte}
+
+Cada pregunta tiene cuatro tipos de recuadros. \textbf{Contenido} y \textbf{Herramienta} entregan lo que necesitas saber (definiciones, fórmulas, hechos de los papers) y que no está, o está incompleto, en tus notas. \textbf{Evidencia} cita resultados concretos de los papers. \textbf{Preguntas guía} es una secuencia: cada pregunta usa la anterior, y la última te pide redactar la respuesta. El apunte \emph{no} contiene las respuestas: lo que puedes calcular, está planteado para que lo calcules.
+
+Las referencias a «tus notas» son al PDF \texttt{Notes/main.pdf} y las de «la presentación», a las diapositivas.
+
+\subsection*{¿Alcanzan tus notas para responder?}
+
+\renewcommand{\arraystretch}{1.25}
+\begin{center}
+\small
+\begin{tabularx}{\textwidth}{@{}>{\bfseries}l X X c@{}}
+\toprule
+ & Lo que ya tienes & Lo que falta (y se agrega aquí) & ¿Alcanza? \\
+\midrule
+P1 & RSSM, ciclo de aprendizaje, Gumbel-Softmax y estimador ST. & Forma exacta de $z_t$, pérdidas KL con \emph{free bits} y \emph{unimix}, y evidencia empírica sobre por qué ayudan los latentes discretos. & No \\
+P2 & Definiciones, teorema de Wang et al.\ y criterio de Li et al. & Los ejemplos del paper de Wang (los omitiste), condicionamiento gaussiano y el caso del decoder expresivo. & A medias \\
+P3 & Arquitectura y pérdida de VQ-VAE. & \emph{Codebook collapse}, el rol real de $\beta$, actualización EMA y perplejidad. & No \\
+P4 & $\KL=\log K$ y la ELBO. & KL gaussiana en forma cerrada, posterior agregada y la descomposición en información mutua. & No \\
+P5 & Los cuatro modelos están resumidos. & El rol de la KL en DreamerV3 y la lectura de DreamCoder como máquina de Helmholtz. & Casi \\
+P6 & Arquitectura de NLI, $\mathcal{L}_{\mathrm{reg}}$ y tu hipótesis. & Resultados y ablaciones del paper (tu sección «Resultados» de NLI está vacía). & A medias \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\begin{cuidado}[tres errores en tus notas que afectan estas preguntas]
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Signo de la ELBO} (notas, p.~23): escribes $\log p_{\theta}(x)=\mathcal{L}_{\theta,\phi}(x)-\KL(q_{\phi}(z|x)\,\|\,p_{\theta}(z|x))$. Tu propia derivación (y la diapositiva 10) da un $+$. Esto importa en P4.
+  \item \textbf{Pérdida de compromiso} (notas, p.~28): dices que «regula el crecimiento de $K$» y que las $K$ categorías «irán creciendo». En VQ-VAE, $K$ está fijo. El paper dice: \emph{«since the volume of the embedding space is dimensionless, it can grow arbitrarily if the embeddings $e_i$ do not train as fast as the encoder parameters. To make sure the encoder commits to an embedding and its output does not grow, we add a commitment loss»}. Lo que se controla es la norma de $z_e(x)$, no $K$. Esto importa en P3.
+  \item \textbf{Signo de la pérdida de VQ-VAE}: el paper (ec.~3) escribe $L=\log p(x|z_q(x))+\dots$ y la presentación lo copia. Como se \emph{minimiza} $L$, el primer término debería ser $-\log p(x|z_q(x))$. Es un desliz conocido del paper.
+\end{enumerate}
+\end{cuidado}
+
+\newpage
+% =====================================================================
+\section*{Pregunta 1: DreamerV3 y latentes discretos}
+\addcontentsline{toc}{section}{Pregunta 1}
+
+\begin{enunciado}{Pregunta 1 (diap.~50)}
+¿Qué hace que un modelo de mundo con latentes discretos (vectores de categóricas entrenadas con gradientes \emph{straight-through}) funcione mejor que uno con latentes gaussianos continuos?
+\end{enunciado}
+
+\begin{definicion}[cómo es exactamente $z_t$]
+\begin{itemize}[leftmargin=*]
+  \item $z_t$ es un vector de $L$ variables categóricas, cada una con $C$ clases. Se representa como $L$ vectores \emph{one-hot} concatenados. En DreamerV3, $C$ = «codes per latent» $=d/16$ (de 16 a 96 según el tamaño del modelo), y $L$ está fijo entre tamaños. DreamerV2 usaba $L=C=32$.
+  \item \textbf{Straight-through (sin Gumbel):} se muestrea $k\sim\operatorname{Cat}(p)$ y se usa
+  \[ \hat z = \operatorname{onehot}(k) + p - \sg(p). \]
+  Hacia adelante, $\hat z$ vale el one-hot. Hacia atrás, el gradiente pasa como si $\hat z=p$. A diferencia del estimador Gumbel-ST de tus notas, aquí no hay temperatura ni annealing.
+  \item \textbf{Unimix:} $p = 0.99\cdot\operatorname{softmax}(\ell)+0.01\cdot\tfrac{1}{C}$. Así, ninguna clase tiene probabilidad menor que $0.01/C$.
+\end{itemize}
+\end{definicion}
+
+\begin{definicion}[las pérdidas del modelo de mundo (ec.~2--3 del paper)]
+\[ \mathcal L(\phi)=\E_{q_\phi}\Big[\textstyle\sum_t \beta_{\mathrm{pred}}\mathcal L_{\mathrm{pred}}+\beta_{\mathrm{dyn}}\mathcal L_{\mathrm{dyn}}+\beta_{\mathrm{rep}}\mathcal L_{\mathrm{rep}}\Big],\qquad \beta_{\mathrm{pred}}=1,\ \beta_{\mathrm{dyn}}=1,\ \beta_{\mathrm{rep}}=0.1, \]
+\begin{align*}
+\mathcal L_{\mathrm{dyn}}&=\max\!\big(1,\ \KL[\sg(q_\phi(z_t|h_t,x_t))\,\|\,p_\phi(z_t|h_t)]\big),\\
+\mathcal L_{\mathrm{rep}}&=\max\!\big(1,\ \KL[q_\phi(z_t|h_t,x_t)\,\|\,\sg(p_\phi(z_t|h_t))]\big).
+\end{align*}
+El $\max(1,\cdot)$ son los \emph{free bits}: bajo 1 nat ($\approx1.44$ bits) la KL deja de dar gradiente. El paper los justifica así: \emph{«to avoid a degenerate solution where the dynamics are trivial to predict but fail to contain enough information about the inputs»}. Aquí la «prior» no es fija: es el predictor $p_\phi(z_t|h_t)$, que se aprende.
+\end{definicion}
+
+\begin{evidencia}[Meyer, White y Machado (2024), en tu carpeta \texttt{Additional/2312.01203v3.pdf}]
+\begin{enumerate}[leftmargin=*]
+  \item Los modelos de mundo sobre representaciones discretas (VQ-VAE) predicen con más exactitud las transiciones \emph{poco frecuentes} en los datos de entrenamiento (sec.~3.2.1).
+  \item La ventaja \emph{desaparece} cuando el modelo de mundo es suficientemente grande. Sólo aparece cuando la capacidad es limitada respecto al mundo (sec.~3.2.2, fig.~3).
+  \item Con el mismo VQ-VAE (misma información), representar los latentes como \emph{multi-one-hot} supera ampliamente a representarlos como vectores cuantizados $e_k$. Según los autores, lo que importa no es la «discretitud», sino que la representación sea \emph{binaria y rala} (sec.~3.2.3, fig.~4).
+\end{enumerate}
+\end{evidencia}
+
+\begin{guia}
+\begin{enumerate}[leftmargin=*]
+  \item Con $L=C=32$, ¿cuántos valores distintos puede tomar $z_t$? ¿Cuántos bits son como máximo? Compáralo con el máximo de 1 nat que «perdonan» los free bits.
+  \item \textbf{Multimodalidad.} Desde un mismo $h_t$, el siguiente estado puede ser A o B con probabilidad $\tfrac12$ cada uno, con posteriores $q$ concentradas en $z_A$ y $z_B$ (lejanos). Si $p_\phi(\hat z|h)=\N(\mu,\sigma^2 I)$ se ajusta por máxima verosimilitud a muestras que valen $z_A$ o $z_B$ con probabilidad $\tfrac12$ (es lo que hace $\mathcal L_{\mathrm{dyn}}$, que minimiza $\KL(\sg(q)\,\|\,p)$), ¿qué $\mu$ y $\sigma$ resultan? ¿Qué estados genera el modelo al \emph{imaginar}? ¿Y si $p_\phi$ es categórica?
+  \item Generaliza lo anterior: una mezcla de categóricas sobre $C$ clases, ¿qué tipo de distribución es? ¿Y una mezcla de gaussianas? Conecta esto con la \emph{posterior agregada} $q(z)=\E_x q(z|x)$ de la Pregunta 4.
+  \item El predictor de DreamerV3 es factorizado entre las $L$ categóricas. ¿Qué distribuciones sobre $z_t$ no puede representar? ¿Qué rol cumple entonces $\mathcal L_{\mathrm{rep}}$, que empuja a $q$ hacia $p$?
+  \item \textbf{Saltos bruscos.} En Atari, al derrotar a un enemigo aparece otro de golpe. Con un decoder suave y $z$ gaussiano, ¿qué relación hay entre cambios pequeños de $z$ y cambios en $\hat x$? ¿Ese sesgo es bueno o malo para transiciones discontinuas?
+  \item \textbf{Estabilidad de la KL.} Con unimix, acota $\KL(q\,\|\,p)$ entre dos categóricas de $C$ clases (pista: $p_k\ge 0.01/C$). Evalúa la cota para $C=32$. ¿Existe una cota así entre dos gaussianas? ¿Por qué el paper menciona «picos» en la KL?
+  \item \textbf{Free bits y colapso.} Describe en tus palabras la «solución degenerada» que evitan los free bits. ¿Es un \emph{posterior collapse} según la definición de Wang et al.? (Ojo: aquí la prior también se mueve).
+  \item \textbf{Gradientes.} El estimador ST es sesgado y la reparametrización gaussiana no. ¿Qué otras propiedades (escala de las entradas, acotamiento, ralidad) podrían compensar ese sesgo? Usa el punto~3 de Meyer et al.
+  \item Lee la sec.~3.2.3 de Meyer et al. ¿Qué parte de tu explicación sobrevive a ese experimento: la discretitud, la ralidad o la forma binaria?
+  \item \textbf{Redacción.} Escribe 3 o 4 mecanismos candidatos. Para cada uno, indica qué evidencia lo apoya (paper y experimento) y si es un hecho demostrado o una hipótesis. Después compara con las hipótesis de DreamerV2 (sección sobre latentes discretos).
+\end{enumerate}
+\end{guia}
+\fuente{Hafner et al.\ (2023), arXiv:2301.04104, sec.\ «World model learning» y tabla de hiperparámetros. Meyer et al.\ (2024), arXiv:2312.01203. Para contrastar al final: Hafner et al.\ (2021), \emph{Mastering Atari with Discrete World Models}, arXiv:2010.02193 (no está en tu carpeta).}
+
+\newpage
+% =====================================================================
+\section*{Pregunta 2: Ejemplos de posterior collapse}
+\addcontentsline{toc}{section}{Pregunta 2}
+
+\begin{enunciado}{Pregunta 2 (diap.~21)}
+Construye ejemplos pequeños (pocas dimensiones, calculables a mano) de modelos de variable latente en los que ocurra colapso posterior, y explica intuitivamente por qué ocurre en cada uno.
+\end{enunciado}
+
+\begin{definicion}[dos niveles de colapso]
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Colapso de la posterior exacta:} $p(z|x;\hat\theta)=p(z)$. Por el Teorema de Wang et al., equivale a que $p(x|z;\hat\theta)$ no dependa de $z$. Es un problema \emph{del modelo y de los datos}, no de la inferencia variacional.
+  \item \textbf{Colapso de la posterior aproximada:} $q_\phi(z|x)=p(z)$ aunque la exacta no colapse. Wang et al.\ advierten que puede pasar si la familia variacional es demasiado restrictiva.
+  \item \textbf{Colapso parcial:} sólo algunas coordenadas de $z$ cumplen lo anterior.
+\end{itemize}
+\end{definicion}
+
+\begin{herramienta}[condicionamiento gaussiano en 1D]
+Si $z\sim\N(0,1)$ y $x|z\sim\N(wz,\sigma^2)$, entonces
+\[ p(x)=\N\big(0,\ w^2+\sigma^2\big),\qquad p(z|x)=\N\!\Big(\frac{w\,x}{w^2+\sigma^2},\ \frac{\sigma^2}{w^2+\sigma^2}\Big). \]
+(Puedes verificarlo completando cuadrados en $p(z)p(x|z)$.)
+\end{herramienta}
+
+\begin{evidencia}[Wang et al.\ (2021), sec.~2.2 y apéndice~A]
+\begin{itemize}[leftmargin=*]
+  \item \textbf{GMVAE con $K=2$:} un maximizador de la verosimilitud recupera los dos clusters. Otro pone ambos componentes iguales a la marginal de los datos. Los dos explican los datos igual de bien, pero sólo en el segundo colapsa $z$.
+  \item \textbf{PPCA con latente 2D y datos generados con 1D:} una solución óptima pone $w=[0,\bar w_1]$. Colapsa \emph{sólo} la primera coordenada.
+  \item \textbf{GMM con peso global $\alpha\sim\operatorname{Beta}(5,5)$:} si los clusters se solapan, la posterior de $\alpha$ queda \emph{casi} igual a la prior.
+\end{itemize}
+\end{evidencia}
+
+\begin{guia}[Ejemplo A: ruido versus señal (lineal, 1D)]
+Datos $x\sim\N(0,\xi^2)$. Modelo $z\sim\N(0,1)$, $x|z\sim\N(wz,\sigma'^2)$ con $\sigma'^2$ \emph{fijo} (hiperparámetro).
+\begin{enumerate}[leftmargin=*]
+  \item Escribe $\E_{x}[\log p(x;w)]$ como función de $w$. ¿Qué $w^\ast$ la maximiza? Separa en casos según $\xi^2$ y $\sigma'^2$.
+  \item Con $w^\ast$, calcula $p(z|x)$. ¿En qué caso es igual a $p(z)$? Compara la condición con el criterio $\sigma'^2>\max_i\xi_i^2$ de Li et al.
+  \item Pasa a $x\in\R^N$ con covarianza de valores propios $\xi_1^2\ge\dots\ge\xi_N^2$ y latente $z\in\R^N$. ¿Qué coordenadas colapsan si $\xi_2^2<\sigma'^2<\xi_1^2$?
+\end{enumerate}
+\end{guia}
+
+\begin{guia}[Ejemplo B: componentes indistinguibles]
+$z\in\{1,2\}$ uniforme y $x|z\sim\N(\mu_z,1)$.
+\begin{enumerate}[leftmargin=*]
+  \item Si los datos vienen de $\N(0,1)$, muestra que $\mu_1=\mu_2=0$ maximiza la verosimilitud. Calcula $p(z=1|x)$.
+  \item ¿Y si los datos vienen de $\tfrac12\N(-5,1)+\tfrac12\N(5,1)$? Calcula $p(z=1|x=5)$ en el óptimo, al menos aproximadamente.
+  \item ¿Qué tiene que ver el resultado con que $p(x|z)$ sea o no inyectiva en $z$?
+\end{enumerate}
+\end{guia}
+
+\begin{guia}[Ejemplo C: decoder demasiado expresivo]
+$x=(x_1,x_2)\in\{0,1\}^2$ con $x_1\sim\operatorname{Bern}(\tfrac12)$ y $x_2=x_1$. Latente $z\in\{0,1\}$ con prior uniforme. Compara dos decoders:
+(i) factorizado, $p(x_1|z)\,p(x_2|z)$; (ii) autorregresivo, $p(x_1|z)\,p(x_2|x_1,z)$.
+\begin{enumerate}[leftmargin=*]
+  \item Calcula $\E[\log p_{\mathrm{data}}(x)]$. Es la mejor log-verosimilitud posible.
+  \item Para (i), ¿cuál es la mejor ELBO si el decoder ignora $z$? ¿Y si $q(z|x)$ copia $x_1$? (Calcula el término de reconstrucción y la KL por separado.)
+  \item Repite para (ii). ¿Qué solución gana? Si hay empate, ¿qué la desempata en la práctica? Piensa en una $q$ que no puede ser exactamente determinista, como una gaussiana, y en qué término de la ELBO da gradiente desde el primer paso.
+\end{enumerate}
+\end{guia}
+
+\begin{guia}[Síntesis]
+\begin{enumerate}[leftmargin=*]
+  \item Para A, B y C: ¿colapsa la posterior exacta o sólo la aproximada? ¿Todo $z$ o algunas coordenadas?
+  \item Clasifica la causa de cada ejemplo: datos, ruido, decoder u optimización. ¿Cuál de las preguntas de la diap.~21 responde cada uno?
+  \item Redacta la intuición de cada ejemplo en una o dos frases, sin fórmulas.
+\end{enumerate}
+\end{guia}
+\fuente{Wang et al.\ (2021), arXiv:2301.00537, sec.~2.2, 4.2 y ap.~A. Li et al.\ (2025), arXiv:2510.01621, sec.~4. Para el Ejemplo C: Chen et al.\ (2017), \emph{Variational Lossy Autoencoder}, arXiv:1611.02731 (argumento de «bits-back»; no está en tu carpeta).}
+
+\newpage
+% =====================================================================
+\section*{Pregunta 3: VQ-VAE y posterior collapse}
+\addcontentsline{toc}{section}{Pregunta 3}
+
+\begin{enunciado}{Pregunta 3 (diap.~23)}
+Se dice que VQ-VAE evita el colapso posterior. ¿En qué casos un VQ-VAE igualmente termina ignorando todo o parte de su espacio latente?
+\end{enunciado}
+
+\begin{definicion}[quién recibe gradiente en VQ-VAE]
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Codebook:} el término $\|\sg[z_e(x)]-e\|_2^2$ sólo afecta al $e_k$ \emph{elegido} por el $\arg\min$. Los demás no reciben gradiente.
+  \item \textbf{Versión EMA (ap.~A.1 del paper):} $e_i$ se actualiza como el promedio móvil de las $z_e(x)$ asignadas a él (como en $k$-means). Si a $e_i$ no se le asigna nada ($n_i=0$), no se mueve.
+  \item \textbf{Encoder:} recibe el gradiente de reconstrucción copiado desde $z_q(x)$ (straight-through) y el de compromiso, $\beta\|z_e(x)-\sg[e]\|^2$, que lo atrae hacia el código elegido.
+  \item \textbf{Decoder:} sólo recibe el gradiente de reconstrucción.
+\end{itemize}
+\end{definicion}
+
+\begin{definicion}[uso del codebook y perplejidad]
+La \emph{distribución de uso} es $\hat q(k)=\frac1N\sum_{n}q(z=k|x_n)$, es decir, la posterior agregada empírica. Su \emph{perplejidad} es $\exp(H(\hat q))\in[1,K]$: el «número efectivo de códigos usados». Se habla de \textbf{codebook collapse} o \textbf{códigos muertos} cuando la perplejidad es mucho menor que $K$.
+\end{definicion}
+
+\begin{evidencia}[lo que afirman los papers]
+\begin{itemize}[leftmargin=*]
+  \item VQ-VAE define el colapso posterior como \emph{«the latents are ignored when they are paired with a powerful autoregressive decoder»} y afirma no sufrirlo, incluso con decoder PixelCNN (sec.~4.2).
+  \item En ese mismo experimento (DeepMind Lab, 2 etapas), la segunda etapa usa 3 latentes con $K=512$: \emph{«compressing the image onto 3$\times$9 bits»}. Las texturas \emph{«are generated procedurally by the PixelCNN»}.
+  \item El paper de NLI (sec.~4.3) dice que el estimador ST de VQ-VAE sufre gradientes sesgados, \emph{codebook collapse} (\emph{«many codebook entries remain unused»}, Huh et al., 2023) y desfase entre las salidas del encoder y el codebook (Łańcucki et al., 2020).
+\end{itemize}
+\end{evidencia}
+
+\begin{guia}
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Juguete.} $x\in\{-1,+1\}$ equiprobable, encoder fijo $z_e(x)=x$, $K=2$, con inicialización $e_1=0.1$ y $e_2=5$. ¿A qué código se asigna cada $x$? ¿Hacia dónde converge $e_1$? ¿Y $e_2$? ¿Qué recibe el decoder para $x=-1$ y para $x=+1$?
+  \item En ese juguete, calcula $\hat q$, la perplejidad y la información mutua $I_q(x;z)$. Pista: si $q(z|x)$ es determinista, $H(z|x)=0$ (ver P4).
+  \item Ahora deja que el encoder aprenda. ¿Dónde está la frontera de Voronoi entre $e_1$ y $e_2$? El gradiente copiado desde $z_q$, ¿puede llevar $z_e(+1)$ a cruzarla? ¿Ayuda o estorba el término de compromiso? ¿Qué cambia con $\beta$ grande o pequeño?
+  \item Propón dos maneras de inicializar o actualizar el codebook que eviten el juguete anterior. Después compáralas con lo que hacen Łańcucki et al.\ (2020) o Dhariwal et al.\ (2020, Jukebox).
+  \item \textbf{¿Es posterior collapse?} En el juguete, ¿$q(z|x)=p(z)$ con $p$ uniforme? ¿$q(z|x)$ depende de $x$? Distingue «la posterior se iguala a la prior» de «la posterior se vuelve constante en $x$». ¿Cuál de las dos captura la definición de tus notas?
+  \item \textbf{Decoder potente.} Si un decoder PixelCNN puede modelar $x$ casi sin mirar $z_q$, ¿qué gradiente le llega al encoder? Si el decoder ignora del todo $z_q$, $p(x|z)$ es constante en $z$. Por el Teorema de Wang, ¿qué pasa con la posterior \emph{exacta} del modelo, aunque $q(z|x)$ siga siendo one-hot?
+  \item \textbf{Colapso parcial.} En una grilla de latentes ($32\times32$ posiciones), ¿qué significaría que el decoder use sólo algunas posiciones, o que cada posición use pocos códigos? ¿Cómo lo detectarías midiendo $\hat q$ por posición?
+  \item En el experimento de 27 bits, ¿el PixelCNN «ignora» parte de la imagen? ¿Eso es colapso o es la consecuencia deseada de un cuello de botella? ¿Dónde pondrías el límite?
+  \item \textbf{Redacción.} Lista los escenarios en que VQ-VAE ignora (parte de) su latente. Para cada uno, indica la causa y si la KL tiene algo que ver. Usa P4 para justificar por qué no.
+\end{enumerate}
+\end{guia}
+\fuente{van den Oord et al.\ (2017), arXiv:1711.00937, sec.~3.2, 4.2 y ap.~A.1. Macfarlane et al.\ (2026), arXiv:2604.18907, sec.~4.3. Externos (no están en tu carpeta): Łańcucki et al.\ (2020), arXiv:2005.08520; Huh et al.\ (2023), arXiv:2305.08842.}
+
+\newpage
+% =====================================================================
+\section*{Pregunta 4: ¿Por qué deja de importar la KL?}
+\addcontentsline{toc}{section}{Pregunta 4}
+
+\begin{enunciado}{Pregunta 4 (diap.~25)}
+(1) Muestra con una fórmula por qué, en VQ-VAE, la KL deja de influir en el entrenamiento.
+(2) Explica teóricamente y a fondo por qué ocurre, y por qué en un VAE gaussiano la KL sí empuja hacia el colapso.
+\end{enunciado}
+
+\begin{definicion}[la ELBO separada en dos términos]
+A partir de $\mathcal L_{\theta,\phi}(x)=\E_{q_\phi(z|x)}[\log p_\theta(x,z)-\log q_\phi(z|x)]$ y $p_\theta(x,z)=p_\theta(x|z)p(z)$:
+\[ \mathcal L_{\theta,\phi}(x)=\underbrace{\E_{q_\phi(z|x)}[\log p_\theta(x|z)]}_{\text{reconstrucción}}-\underbrace{\KL\big(q_\phi(z|x)\,\|\,p(z)\big)}_{\text{regularización}}. \]
+En el $\beta$-VAE (y en LPN, con $\beta\approx10^{-4}$), el segundo término se multiplica por $\beta$.
+\end{definicion}
+
+\begin{herramienta}[tres fórmulas]
+\begin{itemize}[leftmargin=*]
+  \item \textbf{KL discreta:} $\KL(q\,\|\,p)=\sum_k q_k\log\frac{q_k}{p_k}$, con la convención $0\log 0=0$.
+  \item \textbf{KL gaussiana, 1D} (verifícala):
+  \[ \KL\big(\N(\mu,s^2)\,\|\,\N(0,1)\big)=\tfrac12\big(\mu^2+s^2-1-\log s^2\big). \]
+  En $d$ dimensiones con covarianza diagonal, se suma por coordenada.
+  \item \textbf{Posterior agregada e información mutua:} con $x\sim p_{\mathrm{data}}$,
+  \[ q(z)\coloneqq\E_{x}[q(z|x)],\qquad I_q(x;z)\coloneqq\E_x\big[\KL(q(z|x)\,\|\,q(z))\big]=H(q(z))-\E_x[H(q(z|x))]. \]
+\end{itemize}
+\end{herramienta}
+
+\begin{definicion}[la descomposición sugerida en la diapositiva]
+\[ \E_x\big[\KL(q(z|x)\,\|\,p(z))\big]=I_q(x;z)+\KL\big(q(z)\,\|\,p(z)\big). \]
+Se conoce como «ELBO surgery» (Hoffman y Johnson, 2016). No aparece en tus fuentes, así que tendrás que demostrarla tú.
+\end{definicion}
+
+\begin{guia}[Parte 1: la fórmula]
+\begin{enumerate}[leftmargin=*]
+  \item Calcula $\KL(q(z|x)\,\|\,p(z))$ con $q(z|x)=\delta_k$ (one-hot en $k$) y $p$ uniforme sobre $K$ clases. ¿Depende de $k$, de $x$, de $\phi$, de $\theta$ o de los $e_j$?
+  \item ¿Cuál es entonces su gradiente respecto a cada parámetro? Escribe la pérdida de VQ-VAE con el término que «sobrevive» y los que se añaden en su lugar.
+  \item ¿Seguiría siendo constante si la prior fuese aprendida al mismo tiempo (por ejemplo, un PixelCNN entrenado en conjunto)? ¿Por qué VQ-VAE entrena la prior \emph{después}?
+  \item ¿Y si $q(z|x)$ fuese una categórica \emph{no determinista} (un softmax)? Escribe la KL en función de $H(q(z|x))$. ¿Hacia dónde empujaría a $q$?
+\end{enumerate}
+\end{guia}
+
+\begin{guia}[Parte 2: la teoría]
+\begin{enumerate}[leftmargin=*,resume]
+  \item Demuestra la descomposición. Pista: dentro del logaritmo, multiplica y divide por $q(z)$, y separa en dos esperanzas.
+  \item Interpreta los dos términos. ¿Cuál es el «costo por usar $z$ para guardar información de $x$»? ¿Cuál mide si los códigos, en promedio, se parecen a la prior?
+  \item \textbf{VAE gaussiano.} Con la KL 1D, ¿cuál es el mínimo de $\KL(q(z|x)\,\|\,\N(0,1))$ y dónde se alcanza? Si se alcanza para todo $x$, ¿cuánto vale $I_q(x;z)$?
+  \item Retoma el Ejemplo A de P2 con $q(z|x)=\N(ax,s^2)$. Escribe la ELBO esperada como función de $(w,a,s)$:
+  reconstrucción con $\E[(x-wz)^2]=(1-wa)^2\xi^2+w^2s^2$ y KL $=\tfrac12(a^2\xi^2+s^2-1-\log s^2)$. ¿Para qué valores de $\xi^2/\sigma'^2$ el óptimo tiene $a=0$? ¿Coincide con Li et al.?
+  \item \textbf{VQ-VAE.} Con $q$ determinista, ¿cuánto vale $\E_x[H(q(z|x))]$? Deduce que $I_q(x;z)=H(\hat q)$. Reemplaza en la descomposición: ¿qué identidad obtienes entre $\log K$, $H(\hat q)$ y $\KL(\hat q\,\|\,\mathcal U)$? ¿Qué te dice sobre la presión de la KL sobre $I_q$?
+  \item \textbf{Capacidad.} Si la KL es constante, ¿cuánta información puede llevar $z$ como máximo? Hazlo para una posición, para una grilla de $T$ posiciones, y para el caso de 3 latentes con $K=512$ del paper.
+  \item \textbf{Redacción.} Compara: en el VAE gaussiano, ¿qué término de la descomposición castiga usar $z$, y con qué fuerza respecto a la reconstrucción? En VQ-VAE, ¿qué reemplaza a la KL para mantener el espacio latente «ordenado»? Termina conectando con P3: si la presión no viene de la KL, ¿de dónde viene?
+\end{enumerate}
+\end{guia}
+\fuente{van den Oord et al.\ (2017), sec.~3.1. Kingma y Welling (2019), cap.~2. Externo: Hoffman y Johnson (2016), \emph{ELBO surgery: yet another way to carve up the variational evidence lower bound}, NeurIPS Workshop on Advances in Approximate Bayesian Inference.}
+
+\newpage
+% =====================================================================
+\section*{Pregunta 5: Comparación de los modelos}
+\addcontentsline{toc}{section}{Pregunta 5}
+
+\begin{enunciado}{Pregunta 5 (diap.~53)}
+Para DreamCoder, DreamerV3, LPN y NLI, anota: (1) sus ventajas; (2) los fenómenos a considerar (el rol del posterior collapse y el de las representaciones discretas); (3) 3 o 4 principios importantes que compartan.
+\end{enunciado}
+
+\begin{definicion}[ficha técnica: sólo los hechos]
+\small
+\renewcommand{\arraystretch}{1.3}
+\setlength{\tabcolsep}{3pt}\footnotesize\begin{tabularx}{\linewidth}{@{}>{\bfseries\raggedright}p{1.65cm} *{4}{>{\raggedright\arraybackslash}X}@{}}
+\toprule
+ & DreamCoder & DreamerV3 & LPN & NLI \\
+\midrule
+Latente & Programa $\rho$ simbólico, de largo variable & $s_t=\{h_t,z_t\}$, con $z_t$ de $L$ categóricas & $z\in\R^d$ & $z\in(\Delta^{K-1})^T$ \\
+«Prior» & $P(\rho|L)$, dada por la librería & $p_\phi(z_t|h_t)$, aprendida & $\N(0,I)$, fija & No hay \\
+Inferencia & $Q_\theta(\rho|x)$ guía la búsqueda & $q_\phi(z_t|h_t,x_t)$ & $q_\phi(z|x,y)$, promediada & $q_\phi$ inductor, Gumbel-Softmax \\
+Regulari\-zador & $\log P(L)=-\beta\,\mathrm{size}(L)$ (MDL) & KL dyn/rep con free bits y unimix & $\beta\,\KL$, $\beta\approx10^{-4}$ & $\mathcal L_{\mathrm{reg}}$: tokens distintos esperados \\
+«Sueños» & Fantasías $\rho\sim P(\rho|L)$ & Trayectorias imaginadas & No & No \\
+Búsqueda en \emph{test} & Enumeración guiada por $Q_\theta$ & No (\emph{«without lookahead planning»}) & Ascenso de gradiente en $z$ & Ascenso de gradiente en $e$ con annealing \\
+\bottomrule
+\end{tabularx}
+\end{definicion}
+
+\begin{definicion}[DreamCoder como máquina de Helmholtz]
+En la fase de sueño, $Q_\theta$ se entrena maximizando $\E_{(x,\rho)}[\log Q_\theta(\rho|x)]$ sobre pares $(x,\rho)$ de replays y fantasías. Es aprender una posterior aproximada \emph{por máxima verosimilitud sobre muestras del modelo generativo}, como en la máquina de Helmholtz (Dayan et al., 1995). No hay un término $\KL(Q\,\|\,\text{prior})$ que la empuje hacia la prior.
+\end{definicion}
+
+\begin{guia}[(1) Ventajas]
+\begin{enumerate}[leftmargin=*]
+  \item Para cada modelo, ¿qué limitación de su «predecesor» resuelve? DreamCoder frente a un DSL fijo; DreamerV3 frente a ajustar hiperparámetros por dominio; LPN frente a ICL y TTT (Tabla 2 de tus notas); NLI frente a LPN (Tabla 1 del paper de NLI, en P6).
+  \item ¿Qué precio paga cada uno? Piensa en cómputo en test, interpretabilidad y necesidad de un DSL.
+\end{enumerate}
+\end{guia}
+
+\begin{guia}[(2a) Posterior collapse]
+\begin{enumerate}[leftmargin=*,resume]
+  \item ¿En qué modelos hay un término que empuje la posterior hacia una prior? Escríbelo para cada uno.
+  \item \textbf{DreamerV3:} la prior se aprende. ¿Qué pasa con la presión hacia el colapso cuando la prior puede acercarse a la posterior? ¿Por qué $\beta_{\mathrm{dyn}}=1$ y $\beta_{\mathrm{rep}}=0.1$, y no al revés?
+  \item \textbf{LPN:} ¿puede el decoder $p_\theta(y|x,z)$ ignorar $z$? ¿Qué propiedad de la distribución de tareas (mismo $x$, distintos programas) lo impide? Si $z$ colapsara, ¿qué le pasaría a la búsqueda por gradiente en test? ¿Qué sugiere $\beta\approx10^{-4}$ sobre esta preocupación?
+  \item \textbf{NLI:} no hay KL, pero $\mathcal L_{\mathrm{reg}}$ premia usar pocos tokens distintos. Si $\lambda_{\mathrm{reg}}$ fuera enorme, ¿hacia qué falla de P3 empujaría? ¿Qué término lo contrarresta?
+  \item \textbf{DreamCoder:} ¿qué significaría que $Q_\theta(\rho|x)$ ignorara $x$, es decir, que $Q_\theta(\rho|x)=P(\rho|L)$? ¿Qué le pasaría a la búsqueda? ¿Hay algo en el objetivo de sueño que empuje hacia eso?
+\end{enumerate}
+\end{guia}
+
+\begin{guia}[(2b) Lo discreto]
+\begin{enumerate}[leftmargin=*,resume]
+  \item ¿Qué es discreto en cada modelo y en qué nivel: la representación, el programa o el estado del intérprete? ¿Cuál no tiene nada discreto?
+  \item ¿Es el mismo «beneficio de lo discreto» en DreamerV3 (Meyer et al.: ralo y binario) que en NLI (reuso y ejecución recurrente)? Argumenta con las ablaciones de P6.
+\end{enumerate}
+\end{guia}
+
+\begin{guia}[(3) Principios]
+\begin{enumerate}[leftmargin=*,resume]
+  \item Para cada eje de la diapositiva (compresión/MDL, búsqueda en test-time, datos soñados, reutilización), escribe qué modelos lo instancian y \emph{cómo}, con la fórmula o el componente concreto. Usa la ficha técnica.
+  \item ¿Hay algún eje que cumpla un solo modelo? Entonces no es un principio compartido: descártalo o reformúlalo.
+  \item Considera un quinto eje: «amortización + refinamiento» (encoder rápido y luego búsqueda, Sistema~1/Sistema~2). ¿En cuáles aparece? ¿Es lo mismo que «búsqueda en test-time»?
+  \item Elige 3 o 4 principios. Cada uno debe tener (a) un enunciado de una línea, (b) al menos dos modelos que lo instancien y (c) un contraejemplo o límite.
+\end{enumerate}
+\end{guia}
+\fuente{Tus notas, sec.~3.1--3.4 y 5.1. Ellis et al.\ (2023), \emph{Phil.\ Trans.\ R.\ Soc.\ A} 381 (en tu carpeta \texttt{Additional/rsta.2022.0050.pdf}), sec.~2 «Wake/sleep program learning». Hafner et al.\ (2023), ec.~3. Externo: Dayan, Hinton, Neal y Zemel (1995), \emph{The Helmholtz Machine}, Neural Computation 7(5).}
+
+\newpage
+% =====================================================================
+\section*{Pregunta 6: ¿NLI en un espacio continuo?}
+\addcontentsline{toc}{section}{Pregunta 6}
+
+\begin{enunciado}{Pregunta 6 (diap.~42)}
+¿Por qué NLI no podría adaptarse a un espacio latente continuo manteniendo la composicionalidad?
+\end{enunciado}
+
+\begin{definicion}[dónde aparece lo discreto en NLI]
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Programa:} $z_t\in\Delta^{K-1}$, con Gumbel-Softmax en el inductor ($\tau_e:8\to0.5$).
+  \item \textbf{Lectura del token:} $E_v^{\top}z_t$. Si $z_t$ es one-hot, se lee \emph{exactamente} una fila del code embedder.
+  \item \textbf{Estado del intérprete:} $\tilde\pi_t=\operatorname{Softmax}((n_t+h_t)/\tau_d)$ es una distribución sobre los valores de cada celda, y se re-embebe con $s_t=E_{\mathrm{io}}^{\top}\pi_t$. Aquí también hay Gumbel ($\tau_d:2\to0.5$).
+  \item \textbf{Skip token:} $\pi_t=z_{t,\mathrm{skip}}\,\pi_{t-1}+(1-z_{t,\mathrm{skip}})\,\tilde\pi_t$.
+  \item \textbf{Regularizador:} $\mathcal L_{\mathrm{reg}}=\sum_{k,j}\big[1-\prod_{b,i}(1-q^{(k,j)}_\phi)\big]$. Cada término es la probabilidad de que el token $k$ se use al menos una vez en la posición $j$.
+\end{enumerate}
+\end{definicion}
+
+\begin{evidencia}[Macfarlane et al.\ (2026): Tabla 1 y Figura 3]
+\small
+\begin{minipage}[t]{0.52\linewidth}
+\textbf{Exactitud OOD} (ID $\approx1.00$ en todos)\\[2pt]
+\begin{tabular}{@{}lccc@{}}
+\toprule
+Método & Shift-L & Shift-P & Comp-I \\
+\midrule
+LPN + gradiente & 0.03 & 0.00 & 0.29 \\
+D-LPN + gradiente & 0.01 & 0.00 & 0.20 \\
+NLI (sin búsqueda) & 0.00 & 0.00 & 0.17 \\
+NLI + gradiente & \textbf{0.99} & \textbf{1.00} & \textbf{0.91} \\
+\bottomrule
+\end{tabular}\\[3pt]
+D-LPN es LPN con tokens discretos (Gumbel) antepuestos a un decoder transformer, \emph{sin} ejecución recurrente.
+\end{minipage}\hfill
+\begin{minipage}[t]{0.44\linewidth}
+\textbf{Ablaciones} (exactitud OOD)\\[2pt]
+\begin{tabular}{@{}lr@{}}
+\toprule
+Base & 97\% \\
+sin Gumbel en el inductor & 76\% \\
+sin pérdida del encoder & 66\% \\
+sin skip token & 24\% \\
+sin Gumbel en el intérprete & 5\% \\
+sin capa discreta & 5\% \\
+sin ejecución recurrente & 2\% \\
+sin programa discreto & 1\% \\
+\bottomrule
+\end{tabular}
+\end{minipage}
+\par\smallskip
+\begin{itemize}[leftmargin=*]
+  \item En Shift-L, el token 231 aprende a ser «desplazar 1» y el 476, «desplazar 2». Un desplazamiento de 8 (fuera de distribución) se escribe con cuatro 231 y dos 476.
+  \item El paper dice que la búsqueda tiene menos riesgo de sobreajuste: \emph{«the search space is less flexible than such continuous search spaces, limited to recomposing a set of discrete embeddings»}.
+  \item El texto no define con precisión las ablaciones «sin capa discreta» y «sin programa discreto». Si las usas como argumento, revisa el código.
+\end{itemize}
+\end{evidencia}
+
+\begin{guia}
+\begin{enumerate}[leftmargin=*]
+  \item Para cada pieza del recuadro de contenido, ¿qué pasaría si $z_t$ fuese un vector arbitrario de $\R^D$? Marca las que dejan de tener sentido, las que cambian de significado y las que siguen igual.
+  \item \textbf{Reuso.} Con tokens continuos, ¿cuándo dos tokens son «el mismo»? Para definirlo necesitas una métrica y un umbral. ¿Qué acabas construyendo? ¿Qué pasa con $1-\prod(1-q)$ si $q$ ya no es una probabilidad?
+  \item \textbf{Composición como repetición.} Un desplazamiento de 8 aplica 231 cuatro veces. Supón que cada paso del intérprete es una función $f_v(s)=d(s,v)$, que el token aprendido es $v_{231}+\delta$, y que $f$ es $\Lambda$-Lipschitz en $s$. Acota cómo crece el error en el estado después de $T$ pasos. ¿Qué hace el paso discreto del intérprete (punto 3 del recuadro) con ese error? Relaciónalo con «sin Gumbel en el intérprete: 5\%».
+  \item \textbf{Tamaño del espacio de búsqueda.} ¿Cuántos programas distintos hay con $T$ posiciones y $K$ tokens? ¿Cuántos bits cuesta describir uno? ¿Y en un espacio continuo, a precisión arbitraria? Relaciónalo con el MDL y con Flat Minima: ¿qué prefiere la búsqueda cuando muchos programas explican los $n$ ejemplos?
+  \item \textbf{D-LPN.} Es discreto, pero no tiene recurrencia, y falla. ¿Qué te dice eso sobre si lo discreto es suficiente? ¿Y «sin programa discreto: 1\%» sobre si es necesario? Formula la conclusión con ambas palabras.
+  \item \textbf{¿«No se podría» o «sería más difícil»?} Sin Gumbel en el inductor, el modelo baja a 76\%, no a 0\%. Los autores conjeturan que \emph{«the network can still learn peaked distributions»}. Si un modelo continuo termina formando grupos de vectores bien separados, ¿sigue siendo continuo en el sentido que importa? Compáralo con LPN, que es el caso continuo puro.
+  \item \textbf{Redacción.} Responde nombrando qué propiedad concreta se perdería en una versión verdaderamente continua: la identidad exacta de los tokens, la corrección de errores paso a paso, un espacio de hipótesis numerable, u otra. Indica qué evidencia apoya cada una. Termina contrastando con la hipótesis de los «bloques» de tus notas (sec.~3.4): ¿la evidencia apoya esa hipótesis o algo más específico?
+\end{enumerate}
+\end{guia}
+\fuente{Macfarlane et al.\ (2026), arXiv:2604.18907, sec.~3, 4.1--4.3 y ap.~B.1. Macfarlane et al.\ (2024), arXiv:2411.08706, sec.~B.10 y conclusión. Tus notas, sec.~3.2--3.4.}
+
+\end{document}

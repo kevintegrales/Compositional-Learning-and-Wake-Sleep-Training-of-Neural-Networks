@@ -31,15 +31,16 @@
 #fuente[_Reinforcement Learning: An Introduction_, R. S. Sutton y A. G. Barto, caps. 1 y 3.]
 
 #columnas(proporcion: (1.15fr, 1fr))[
-  - Aprendizaje *por interacción* guiado por retornos a largo plazo: un tercer paradigma junto al supervisado y al no supervisado.
   - Un *agente* actúa, el *ambiente* responde con una *recompensa* y un nuevo *estado*.
+  - Aprendizaje *por interacción* guiado por retornos a largo plazo: un tercer paradigma junto al supervisado y al no supervisado.
   - Componentes: *política* $pi_t (a|s)$, *señal de recompensa*, *función de valor* y (opcional) *modelo del ambiente*.
   - Tradeoff *explorar* vs. *explotar*.
 ][
   #figure(image("images/rl_relation.png", width: 100%))
 ]
 
-== Procesos de Decisión de Markov Finitos
+#pagebreak()
+=== Procesos de Decisión de Markov Finitos
 
 En cada instante $t$: estado $S_t in SSS$, acción $A_t in AAA(S_t)$, recompensa $R_(t+1) in RRR subset RR$.
 
@@ -115,14 +116,16 @@ $
 - *Problema:* esa integral es intratable, y por lo tanto también la posterior $p_ttheta (zz|xx)$.
 - *Solución:* un *encoder* (inferencia variacional amortizada) $q_pphia (zz|xx) approx p_ttheta (zz|xx)$.
 
-== ELBO
-
-#eqn[ELBO][$ elbo (xx) := EE_(zz ~ q_pphia (zz|xx)) [log p_ttheta (xx, zz) - log q_pphia (zz|xx)] $]
+#pagebreak()
+=== ELBO
 
 Se cumple que
 $
   log p_ttheta (xx) = elbo (xx) + KL >= elbo (xx).
 $
+Donde
+#eqn[ELBO][$ elbo (xx) := EE_(zz ~ q_pphia (zz|xx)) [log p_ttheta (xx, zz) - log q_pphia (zz|xx)] $]
+
 
 La divergencia KL mide simultáneamente:
 1. la distancia entre la posterior real $p_ttheta (zz|xx)$ y su aproximación $q_pphia (zz|xx)$;
@@ -130,7 +133,8 @@ La divergencia KL mide simultáneamente:
 
 Por eso se maximiza $elbo$ respecto a $ttheta$ y $pphia$ a la vez.
 
-== Truco de Reparametrización
+#pagebreak()
+=== Truco de Reparametrización
 
 El gradiente respecto a $pphia$ no entra en la esperanza, pues $q_pphia$ depende de $pphia$. Escribimos
 $
@@ -145,7 +149,8 @@ $
   $q_pphia (zz|xx) = "Normal"(zz; bold(mu), "diag"(bold(sigma)))$ con $(bold(mu), log bold(sigma)) = "EncoderNeuralNet"_pphia (xx)$ y $zz = bold(mu) + bold(sigma) dot.o eeps$, $eeps ~ "Normal"(0, I)$.
 ]
 
-== Algoritmo AEVB
+#pagebreak()
+=== Algoritmo AEVB
 
 #algot[AEVB][
   *Data:* dataset $cal(D)$, modelo de inferencia $q_pphia (zz|xx)$, modelo generativo $p_ttheta (xx, zz)$.
@@ -181,7 +186,8 @@ $
 
 #figure(image("images/vq_vae_pipeline.png", height: 46%))
 
-== VQ-VAE: Aprendizaje
+#pagebreak()
+=== VQ-VAE: Aprendizaje
 
 $
   L = underbrace(log p(x|z_q (x)), "reconstrucción") + underbrace(norm("sg"[z_e (x)] - e)^2_2, "VQ") + underbrace(beta norm(z_e (x) - "sg"[e])^2_2, "compromiso").
@@ -210,7 +216,8 @@ $
 
 Si $tau -> 0^+$, las muestras se vuelven one-hot y se recupera la categórica.
 
-== Estimadores Gumbel-Softmax
+#pagebreak()
+=== Estimadores Gumbel-Softmax
 
 - *Gumbel-Softmax:* reemplaza las muestras categóricas por $y$, que es diferenciable respecto a $pi$, y permite _backpropagation_.
 - *Tradeoff:* $tau$ pequeño da muestras casi one-hot pero gradientes de alta varianza. En la práctica se parte con $tau$ alto y se va reduciendo (_annealing_).
@@ -224,7 +231,7 @@ Si $tau -> 0^+$, las muestras se vuelven one-hot y se recupera la categórica.
 
 == Posterior Collapse
 
-El *colapso posterior* ocurre cuando el encoder ignora (parte de) el espacio latente:
+El *colapso posterior* ocurre cuando el encoder ignora (por lo general parte de) el espacio latente:
 $
   q_phia (zz|xx) = p_theta (zz).
 $
@@ -239,7 +246,8 @@ $
 $
 con $xi_i^2$ los valores propios de la covarianza de los datos: si hay demasiado ruido, el modelo ignora los datos.
 
-== Colapso y No-Identificabilidad
+#pagebreak()
+=== Colapso y No-Identificabilidad
 #fuente(url: "https://arxiv.org/abs/2301.00537", texto: "arXiv:2301.00537")[_Posterior Collapse and Latent Variable Non-identifiability_, Y. Wang et al. (2021).]
 
 #deft[Variable latente no-identificable][
@@ -250,7 +258,8 @@ con $xi_i^2$ los valores propios de la covarianza de los datos: si hay demasiado
   Las variables latentes $zz$ son no-identificables en $hat(theta)$ si, y sólo si, la posterior de $zz$ colapsa: $p(zz|xx; hat(theta)) = p(zz)$.
 ]
 
-== Colapso y No-Identificabilidad (cont.)
+#pagebreak()
+=== Colapso y No-Identificabilidad (cont.)
 
 #proof[
   $(==>)$ Por Bayes y la no-identificabilidad,
@@ -263,7 +272,7 @@ con $xi_i^2$ los valores propios de la covarianza de los datos: si hay demasiado
 - La caracterización vale más allá de los VAEs (p. ej., PPCA).
 - Proponen el *LIDVAE*, que usa mapeos de Brenier para tener una verosimilitud inyectiva en $zz$ y así no colapsar.
 
-== VQ-VAE: ¿Evita el Colapso Posterior?
+== ¿Por qué se dice que VQ-VAE evita el Colapso Posterior?
 
 Con posterior one-hot y prior uniforme sobre $K$ códigos, la KL de la ELBO es constante:
 $
@@ -282,7 +291,8 @@ así que su gradiente respecto a los parámetros es nulo.
 == DreamCoder
 #fuente(url: "https://arxiv.org/abs/2006.08381", texto: "arXiv:2006.08381")[_DreamCoder: Bootstrapping Inductive Program Synthesis with Wake-Sleep Library Learning_, K. Ellis et al. (2021).]
 
-Dado un conjunto de tareas $cal(X)$ (pares input-output), busca programas ${rho.alt_x}$ que las resuelvan, *construyendo su propio DSL* (librería $L$). Retos: explosión combinatorial, generalización e interpretabilidad.
+Dado un conjunto de tareas $cal(X)$ (pares input-output) provienientes del mismo dominio, busca programas ${rho.alt_x}$ que las resuelvan, *construyendo su propio DSL* (librería $L$), que es compartido entre todos los programas. 
+- _Retos_: explosión combinatorial, generalización e interpretabilidad.
 
 #def[
   El *joint description length* de una librería $L$ y programas ${rho.alt_x}$ es
@@ -293,18 +303,21 @@ Dado un conjunto de tareas $cal(X)$ (pares input-output), busca programas ${rho.
 
 El objetivo es el del MDL, pero es intratable: se introduce un *modelo de reconocimiento* $Q_theta (rho.alt|x)$ que guía la búsqueda.
 
-== DreamCoder: Ciclo Wake-Sleep
+#pagebreak()
+=== DreamCoder: Ciclo Wake-Sleep
 
+#v(80pt)
 #table(
   columns: (auto, auto, 1fr),
   align: (left, center, left),
   table.header([*Fase*], [*Actualiza*], [*Qué hace*]),
-  [*Wake*], [${rho.alt_x}$], [Busca, para cada tarea, el programa que maximiza $log Q_theta (rho.alt|x) + log P(rho.alt|L)$.],
+  [*Wake*], [${rho.alt_x}$], [Busca, para cada tarea, el programa que maximiza $log Q_theta (rho.alt|x) + log P(rho.alt|L)$ (prior sobre la librería).],
   [*Sleep: abstracción*], [$L$], [$L^* = arg max_L [log P(L) + sum_x log P(rho.alt_x^*|L)]$: comprime los programas en nuevas funciones.],
   [*Sleep: sueños*], [$theta$], [Entrena $Q_theta$ con *replays* $(x, rho.alt_x^*)$ y *fantasías* $(x, rho.alt)$ con $rho.alt ~ P(rho.alt|L)$.],
 )
 
-#notat[Conexión con DreamerV3][
+#v(60pt)
+#notat[Conexión con DreamerV3 (más adelante)][
   Las fantasías cumplen un rol parecido al modelo de mundo de DreamerV3: permiten ensayar con datos que no vienen de la fuente original.
 ]
 
@@ -321,7 +334,8 @@ $
   underbrace(z ~ q_phia (z|x, y), "Encoder") qquad --> qquad underbrace(z' = f(p_theta, z, x, y), "Optimización latente") qquad --> qquad underbrace(hat(y) ~ p_theta (y|x, z'), "Decoder")
 $
 
-== LPN: Optimización en el Espacio Latente
+#pagebreak()
+=== LPN: Optimización en el Espacio Latente
 
 Se busca el programa latente que mejor explica los ejemplos bajo el decoder actual:
 $
@@ -338,7 +352,8 @@ $
   El encoder da una intuición rápida (Sistema 1) y la optimización latente la refina deliberadamente (Sistema 2). Ninguno basta por sí solo.
 ]
 
-== LPN: Entrenamiento
+#pagebreak()
+=== LPN: Entrenamiento
 
 Estrategia *leave-one-out*: para reconstruir $y_i$ se codifican y promedian los pares $j != i$, se optimiza el latente y se evalúa en $(x_i, y_i)$.
 $
@@ -349,7 +364,8 @@ $
 - Se usa el truco de reparametrización $z = mu + epsilon.alt dot Sigma$.
 - En test-time, $phia$ y $theta$ quedan fijos: sólo se mueve $z$.
 
-== LPN: Resultados en la Tarea Pattern
+#pagebreak()
+=== LPN: Resultados en la Tarea Pattern
 
 #figure(
   table(
@@ -373,8 +389,10 @@ $
   4. El gradiente supera ampliamente al muestreo.
 ]
 
-== LPN: Generalización y Limitaciones
+#pagebreak()
+=== LPN: Generalización y Limitaciones
 
+#v(80pt)
 #columnas(proporcion: (1fr, 1.2fr))[
   #figure(
     table(
@@ -391,8 +409,6 @@ $
 ][
   - *La búsqueda en test-time permite adaptarse a tareas nuevas.*
   - *Composición limitada:* compone dos operaciones vistas por separado, pero falla con tres. Cada programa es un *único vector* $z$, sin "partes" reutilizables.
-  - Depende del cómputo en inferencia.
-  - Lejos del estado del arte en ARC.
 ]
 
 == Neural Language Interpreter (NLI)
@@ -406,7 +422,8 @@ $
 - El intérprete es *diferenciable*: eso permite buscar programas con ascenso de gradiente.
 - Puede resolver problemas que requieren *más tokens* de los vistos en entrenamiento.
 
-== NLI: El Inductor $q_phia$
+#pagebreak()
+=== NLI: El Inductor $q_phia$
 
 #columnas(proporcion: (1.5fr, 1fr))[
   El inductor mapea cada par $(x, y)$ a una secuencia de distribuciones sobre el codebook:
@@ -426,7 +443,8 @@ $
   #nota[Un *skip token* permite programas de largo variable aun con $T$ fijo.]
 ]
 
-== NLI: El Intérprete $p_theta$
+#pagebreak()
+=== NLI: El Intérprete $p_theta$
 
 El intérprete aprende dos *embedding matrices* y una red de ejecución $d$:
 - *Code embedder* $E_v$: su fila $k$ es el vector del token $k$; $E_v^T z_t$ "busca en el codebook" la instrucción del paso $t$.
@@ -441,7 +459,8 @@ $
 $
 La predicción es $pi_T$: el *estado interno* $s_t$ se actualiza instrucción a instrucción.
 
-== NLI: Entrenamiento
+#pagebreak()
+=== NLI: Entrenamiento
 
 Leave-one-out sobre batches de $B$ especificaciones con $m$ pares, donde $SSS_(b,i) := SSS_b without {(x_(b,i), y_(b,i))}$:
 $
@@ -456,7 +475,8 @@ $
   el número esperado de tokens distintos usados en el batch.
 - *Annealing:* $tau_e: 8 -> 0.5$ y $tau_d: 2 -> 0.5$. A diferencia de LPN, *no* hay bucle interno de búsqueda al entrenar.
 
-== NLI: Búsqueda en Test-Time
+#pagebreak()
+=== NLI: Búsqueda en Test-Time
 
 Se optimizan los *embeddings continuos* $e$ del inductor, no los tokens directamente:
 $
@@ -476,6 +496,7 @@ $
 
 == El Aporte de la Discretización
 
+#v(50pt)
 #columnas[
   *LPN*
   - Programa = un vector continuo $z$.
@@ -488,12 +509,14 @@ $
   - El intérprete actualiza un *estado interno* $s_t$ token a token: *generalización de longitud*.
 ]
 
+#v(30pt)
 #rel[Hipótesis][
   El pensamiento humano funciona en "bloques": razonamos secuencialmente componiendo _ideas_ aisladas, algo que las representaciones discretas simbolizan mejor que los espacios latentes continuos.
 ]
 
 == ¿Por qué no un NLI con Espacio Latente Continuo?
 
+#v(35pt)
 #columnas(proporcion: (1fr, 1fr))[
   #rel[No se prioriza un vocabulario][
     Tokens continuos similares o idénticos no se pueden distinguir: no hay un conjunto finito de "palabras" que reutilizar, y $cal(L)_"reg"$ pierde su sentido.
@@ -528,7 +551,8 @@ $
 $
 donde minimizar $B$ maximiza el volumen de la caja.
 
-== FMS: ¿Por qué Generalizan los Mínimos Planos?
+#pagebreak()
+=== FMS: ¿Por qué Generalizan los Mínimos Planos?
 
 #algot[FMS (un paso por ejemplo $(x_p, y_p)$)][
   1. *Forward:* calcular $o(w; x_p)$.
@@ -569,7 +593,8 @@ Algoritmo de RL que aprende un *modelo de mundo* y deja que el agente *imagine* 
   $
 ]
 
-== DreamerV3: Ciclo de Aprendizaje
+#pagebreak()
+=== DreamerV3: Ciclo de Aprendizaje
 
 1. *Actuar:* el actor juega en el ambiente real y guarda las trayectorias en el _replay buffer_.
 2. *Entrenar*, en cada paso de gradiente:
@@ -585,15 +610,16 @@ Los retornos se normalizan con $S = "EMA"("Per"(R^lambda_t, 95) - "Per"(R^lambda
 ]
 
 // ===============================================
-= Síntesis: Aprendizaje Composicional
+= Síntesis
 // ===============================================
 
 == Principios del Aprendizaje Composicional
 
+#v(40pt)
 #grid(
   columns: (1fr, 1fr),
-  column-gutter: 20pt,
-  row-gutter: 10pt,
+  column-gutter: 30pt,
+  row-gutter: 30pt,
   rel[1\. Lo simple generaliza mejor (MDL)][
     Una descripción corta no alcanza a memorizar el ruido: para comprimir debe capturar la regularidad real de los datos, que es la que se repite en datos nuevos. _DreamCoder, Flat Minima._
   ],
