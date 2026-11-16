@@ -1,0 +1,46 @@
+
+@charset "utf-8";
+body { font-family: serif; line-height: 1.45; margin: 0 0.4em; color: #1a1a1a; }
+h1 { font-size: 1.6em; font-weight: normal; margin: 1.6em 0 0.2em; line-height: 1.2; }
+h1 .num { display: block; font-size: 0.55em; letter-spacing: 0.15em; color: #b5467a;
+          font-variant: small-caps; margin-bottom: 0.3em; }
+h1 + hr { border: 0; border-top: 2px solid #f4c2d4; width: 30%; margin: 0 0 1.4em 0; }
+h2 { font-size: 1.2em; margin: 1.5em 0 0.5em; }
+h2 .num { color: #b5467a; margin-right: 0.4em; }
+h3 { font-size: 1.05em; font-style: italic; font-weight: normal; margin: 1.2em 0 0.4em; }
+p { margin: 0 0 0.7em; text-align: justify; }
+a { color: #b5467a; text-decoration: none; }
+img.eq { vertical-align: middle; margin: 0; padding: 0; }
+div.eq-bloque { text-align: center; margin: 0.8em 0; }
+div.eq-bloque img { max-width: 100%; }
+figure { margin: 1.2em 0; text-align: center; }
+img.figura { max-width: 100%; }
+figcaption { font-size: 0.85em; text-align: left; margin-top: 0.4em; }
+figcaption .rot { color: #b5467a; font-weight: bold; }
+table { border-collapse: collapse; margin: 1em 0; font-size: 0.85em; width: 100%; }
+th { border-bottom: 1px solid #1a1a1a; text-align: left; padding: 0.2em 0.4em; }
+td { border-bottom: 1px solid #eeeeee; padding: 0.2em 0.4em; vertical-align: top; }
+p.titulo-caja { font-variant: small-caps; font-weight: bold; margin: 0 0 0.3em; text-align: left; }
+div.idea { background: #f6f6f6; border-left: 3px solid #1a1a1a; padding: 0.6em 0.8em; margin: 1em 0; }
+div.llevamos { background: #fdf1f5; border: 1px solid #f4c2d4; padding: 0.6em 0.8em; margin: 1.2em 0; }
+div.llevamos p.titulo-caja, div.frase p.titulo-caja, div.pensar p.titulo-caja { color: #b5467a; }
+div.frase { border-top: 1px solid #f4c2d4; border-bottom: 1px solid #f4c2d4; padding: 0.5em 0.2em; margin: 0.5em 0 1.3em; }
+div.pensar { border-left: 3px solid #f4c2d4; padding: 0.3em 0.8em; margin: 1em 0; }
+div.destacado { border: 1px solid #1a1a1a; margin: 1.2em 0; }
+div.destacado p.titulo-caja { background: #f4c2d4; padding: 0.3em 0.7em; margin: 0; font-variant: normal; }
+div.destacado > *:not(.titulo-caja) { margin-left: 0.7em; margin-right: 0.7em; }
+div.respuesta { border-left: 3px solid #f4c2d4; padding: 0.3em 0.8em; margin: 1em 0; }
+div.respuesta p.titulo-caja { font-variant: normal; }
+div.fuente { font-size: 0.85em; color: #5c5c5c; border-left: 1px solid #d9d9d9; padding-left: 0.6em; margin: 0.4em 0 1em; }
+div.ficha { border-top: 1px solid #1a1a1a; border-bottom: 1px solid #1a1a1a; margin: 1em 0; }
+div.ficha table { margin: 0.3em 0; }
+div.ficha td { border: 0; }
+/* Sin texto blanco sobre fondo oscuro: si un lector ignora el fondo, el texto sigue visible */
+span.pieza { font-size: 0.8em; font-weight: bold; border: 1px solid #1a1a1a; padding: 0 0.3em;
+             border-radius: 0.7em; }
+span.etiqueta { font-variant: small-caps; font-size: 0.85em; padding: 0 0.3em; border-radius: 0.6em; }
+span.establecido { border: 1px solid #1a1a1a; font-weight: bold; }
+span.sugerido { background: #f4c2d4; border: 1px solid #f4c2d4; }
+span.conjetura { border: 1px solid #b5467a; color: #b5467a; }
+dl dt { font-weight: bold; margin-top: 0.4em; }
+dl dd { margin-left: 1em; }

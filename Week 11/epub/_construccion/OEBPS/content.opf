@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://www.idpf.org/2007/opf" version="3.0" unique-identifier="uid" xml:lang="es">
+<metadata xmlns:dc="http://purl.org/dc/elements/1.1/">
+<dc:identifier id="uid">urn:uuid:84fb8956-7d0e-54ee-a4ed-6b901cdee6bf</dc:identifier>
+<dc:title>¿Qué gana y qué pierde un modelo al discretizar?</dc:title>
+<dc:creator>Kevin Cardemil Ulloa</dc:creator>
+<dc:language>es</dc:language>
+<meta property="dcterms:modified">2026-10-26T03:54:59Z</meta>
+<meta name="cover" content="portada-img"/>
+</metadata>
+<manifest>
+<item id="nav" href="nav.xhtml" media-type="application/xhtml+xml" properties="nav"/>
+<item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/>
+<item id="css" href="estilo.css" media-type="text/css"/>
+<item id="portada-img" href="portada.png" media-type="image/png" properties="cover-image"/>
+<item id="portada" href="portada.xhtml" media-type="application/xhtml+xml"/>
+<item id="c0" href="cap01.xhtml" media-type="application/xhtml+xml"/>
+<item id="c1" href="cap02.xhtml" media-type="application/xhtml+xml"/>
+<item id="c2" href="cap03.xhtml" media-type="application/xhtml+xml"/>
+<item id="c3" href="cap04.xhtml" media-type="application/xhtml+xml"/>
+<item id="c4" href="cap05.xhtml" media-type="application/xhtml+xml"/>
+<item id="c5" href="cap06.xhtml" media-type="application/xhtml+xml"/>
+<item id="c6" href="cap07.xhtml" media-type="application/xhtml+xml"/>
+<item id="c7" href="cap08.xhtml" media-type="application/xhtml+xml"/>
+<item id="c8" href="cap09.xhtml" media-type="application/xhtml+xml"/>
+<item id="c9" href="cap10.xhtml" media-type="application/xhtml+xml"/>
+<item id="c10" href="cap11.xhtml" media-type="application/xhtml+xml"/>
+<item id="c11" href="cap12.xhtml" media-type="application/xhtml+xml"/>
+<item id="c12" href="cap13.xhtml" media-type="application/xhtml+xml"/>
+<item id="f0" href="figuras/f01_paquete.png" media-type="image/png"/>
+<item id="f1" href="figuras/f02_mapa.png" media-type="image/png"/>
+<item id="f2" href="figuras/f03_autoencoder.png" media-type="image/png"/>
+<item id="f3" href="figuras/f04_mse_vs_ce.png" media-type="image/png"/>
+<item id="f4" href="figuras/f05_modelo_mundo.png" media-type="image/png"/>
+<item id="f5" href="figuras/f06_geometria.png" media-type="image/png"/>
+<item id="f6" href="figuras/f07_donde.png" media-type="image/png"/>
+<item id="f7" href="figuras/f08_onehot_vs_vector.png" media-type="image/png"/>
+<item id="f8" href="figuras/f09_ste.png" media-type="image/png"/>
+<item id="f9" href="figuras/f10_rssm.png" media-type="image/png"/>
+<item id="f10" href="figuras/f11_codificaciones.png" media-type="image/png"/>
+<item id="f11" href="figuras/f12_capacidad.png" media-type="image/png"/>
+<item id="f12" href="figuras/f13_promediar_elegir.png" media-type="image/png"/>
+<item id="f13" href="figuras/f14_mar.png" media-type="image/png"/>
+<item id="f14" href="figuras/f15_error_o_estado.png" media-type="image/png"/>
+<item id="f15" href="figuras/f16_zonas.png" media-type="image/png"/>
+<item id="f16" href="figuras/f17_trayectorias.png" media-type="image/png"/>
+<item id="f17" href="figuras/f18_prob_exacta.png" media-type="image/png"/>
+<item id="f18" href="figuras/f19_localizar.png" media-type="image/png"/>
+<item id="f19" href="figuras/f20_matriz.png" media-type="image/png"/>
+<item id="f20" href="figuras/f21_cubo.png" media-type="image/png"/>
+<item id="f21" href="figuras/f22_principio.png" media-type="image/png"/>
+<item id="f22" href="figuras/f23_colapsos.png" media-type="image/png"/>
+<item id="f23" href="figuras/f24_identificabilidad.png" media-type="image/png"/>
+<item id="f24" href="figuras/f25_diccionario.png" media-type="image/png"/>
+<item id="f25" href="figuras/f26_mapa_iterado.png" media-type="image/png"/>
+<item id="f26" href="figuras/f27_jepa.png" media-type="image/png"/>
+<item id="f27" href="figuras/f28_arbol.png" media-type="image/png"/>
+<item id="f28" href="figuras/f29_mapa_ejes.png" media-type="image/png"/>
+<item id="e0" href="ecuaciones/e_067fab89e18c.png" media-type="image/png"/>
+<item id="e1" href="ecuaciones/e_0770a8a20dd1.png" media-type="image/png"/>
+<item id="e2" href="ecuaciones/e_087873c04d70.png" media-type="image/png"/>
+<item id="e3" href="ecuaciones/e_0d4f1c6c62c8.png" media-type="image/png"/>
+<item id="e4" href="ecuaciones/e_0ebc8092ac45.png" media-type="image/png"/>
+<item id="e5" href="ecuaciones/e_12cca7d095b8.png" media-type="image/png"/>
+<item id="e6" href="ecuaciones/e_199cee68c11c.png" media-type="image/png"/>
+<item id="e7" href="ecuaciones/e_1acae1e65fdb.png" media-type="image/png"/>
+<item id="e8" href="ecuaciones/e_1fd89ccc732a.png" media-type="image/png"/>
+<item id="e9" href="ecuaciones/e_221ff879ded9.png" media-type="image/png"/>
+<item id="e10" href="ecuaciones/e_22c91444e731.png" media-type="image/png"/>
+<item id="e11" href="ecuaciones/e_2522dceb3efb.png" media-type="image/png"/>
+<item id="e12" href="ecuaciones/e_2533c3573a6a.png" media-type="image/png"/>
+<item id="e13" href="ecuaciones/e_2551cb8f6f56.png" media-type="image/png"/>
+<item id="e14" href="ecuaciones/e_2775f389b582.png" media-type="image/png"/>
+<item id="e15" href="ecuaciones/e_29e6c9110cb5.png" media-type="image/png"/>
+<item id="e16" href="ecuaciones/e_2b5e1da4c6dc.png" media-type="image/png"/>
+<item id="e17" href="ecuaciones/e_2b85f81c9226.png" media-type="image/png"/>
+<item id="e18" href="ecuaciones/e_2c1f765e6281.png" media-type="image/png"/>
+<item id="e19" href="ecuaciones/e_2dc8d2c8ecc3.png" media-type="image/png"/>
+<item id="e20" href="ecuaciones/e_2f5372ec6ce0.png" media-type="image/png"/>
+<item id="e21" href="ecuaciones/e_31e306df83bc.png" media-type="image/png"/>
+<item id="e22" href="ecuaciones/e_367a2c79b604.png" media-type="image/png"/>
+<item id="e23" href="ecuaciones/e_374787e816c9.png" media-type="image/png"/>
+<item id="e24" href="ecuaciones/e_3aba372d1f3b.png" media-type="image/png"/>
+<item id="e25" href="ecuaciones/e_3e20390cd5c3.png" media-type="image/png"/>
+<item id="e26" href="ecuaciones/e_3e90b50c71d7.png" media-type="image/png"/>
+<item id="e27" href="ecuaciones/e_4119063c9fe2.png" media-type="image/png"/>
+<item id="e28" href="ecuaciones/e_4327b36d6dae.png" media-type="image/png"/>
+<item id="e29" href="ecuaciones/e_447b67495f85.png" media-type="image/png"/>
+<item id="e30" href="ecuaciones/e_44a04f01028b.png" media-type="image/png"/>
+<item id="e31" href="ecuaciones/e_48c0771fcd41.png" media-type="image/png"/>
+<item id="e32" href="ecuaciones/e_4adf62b6cbc7.png" media-type="image/png"/>
+<item id="e33" href="ecuaciones/e_4c114e198d6f.png" media-type="image/png"/>
+<item id="e34" href="ecuaciones/e_4c57494c5585.png" media-type="image/png"/>
+<item id="e35" href="ecuaciones/e_4ce2e54150ad.png" media-type="image/png"/>
+<item id="e36" href="ecuaciones/e_4d719121f5ef.png" media-type="image/png"/>
+<item id="e37" href="ecuaciones/e_4e5715c39d85.png" media-type="image/png"/>
+<item id="e38" href="ecuaciones/e_4f9bf56b8f7e.png" media-type="image/png"/>
+<item id="e39" href="ecuaciones/e_50a2d9890716.png" media-type="image/png"/>
+<item id="e40" href="ecuaciones/e_56afe4d0b0de.png" media-type="image/png"/>
+<item id="e41" href="ecuaciones/e_6288b1f3da1d.png" media-type="image/png"/>
+<item id="e42" href="ecuaciones/e_67d7397a03e7.png" media-type="image/png"/>
+<item id="e43" href="ecuaciones/e_6e10db9d4410.png" media-type="image/png"/>
+<item id="e44" href="ecuaciones/e_73d3c4b0f0bf.png" media-type="image/png"/>
+<item id="e45" href="ecuaciones/e_7465ac112162.png" media-type="image/png"/>
+<item id="e46" href="ecuaciones/e_74cb77b053af.png" media-type="image/png"/>
+<item id="e47" href="ecuaciones/e_755f20e56d6c.png" media-type="image/png"/>
+<item id="e48" href="ecuaciones/e_77d12538e064.png" media-type="image/png"/>
+<item id="e49" href="ecuaciones/e_78243a0dfb9b.png" media-type="image/png"/>
+<item id="e50" href="ecuaciones/e_793c49429cc8.png" media-type="image/png"/>
+<item id="e51" href="ecuaciones/e_79c12397d592.png" media-type="image/png"/>
+<item id="e52" href="ecuaciones/e_7ae3bed6c788.png" media-type="image/png"/>
+<item id="e53" href="ecuaciones/e_7d18b1328820.png" media-type="image/png"/>
+<item id="e54" href="ecuaciones/e_8118a180f8e8.png" media-type="image/png"/>
+<item id="e55" href="ecuaciones/e_8b3902b46244.png" media-type="image/png"/>
+<item id="e56" href="ecuaciones/e_8d3b3457306b.png" media-type="image/png"/>
+<item id="e57" href="ecuaciones/e_8f0ef56dcca8.png" media-type="image/png"/>
+<item id="e58" href="ecuaciones/e_8fa859036771.png" media-type="image/png"/>
+<item id="e59" href="ecuaciones/e_90795b0a5dd7.png" media-type="image/png"/>
+<item id="e60" href="ecuaciones/e_91639517cad4.png" media-type="image/png"/>
+<item id="e61" href="ecuaciones/e_926dc5fbf09f.png" media-type="image/png"/>
+<item id="e62" href="ecuaciones/e_95cef416a7c1.png" media-type="image/png"/>
+<item id="e63" href="ecuaciones/e_99383c31ade3.png" media-type="image/png"/>
+<item id="e64" href="ecuaciones/e_9b3eb54d5f05.png" media-type="image/png"/>
+<item id="e65" href="ecuaciones/e_9b81d6e033ea.png" media-type="image/png"/>
+<item id="e66" href="ecuaciones/e_9cb2dbcbe906.png" media-type="image/png"/>
+<item id="e67" href="ecuaciones/e_a2aa62840e5a.png" media-type="image/png"/>
+<item id="e68" href="ecuaciones/e_a64a9d75a2ba.png" media-type="image/png"/>
+<item id="e69" href="ecuaciones/e_a6efea55a0f3.png" media-type="image/png"/>
+<item id="e70" href="ecuaciones/e_a78a442f86b4.png" media-type="image/png"/>
+<item id="e71" href="ecuaciones/e_a91347449492.png" media-type="image/png"/>
+<item id="e72" href="ecuaciones/e_aa1b81bcacb9.png" media-type="image/png"/>
+<item id="e73" href="ecuaciones/e_ac61d34f3da2.png" media-type="image/png"/>
+<item id="e74" href="ecuaciones/e_b1b7b187acfc.png" media-type="image/png"/>
+<item id="e75" href="ecuaciones/e_b5de9b4bdd81.png" media-type="image/png"/>
+<item id="e76" href="ecuaciones/e_b62163f7d4e2.png" media-type="image/png"/>
+<item id="e77" href="ecuaciones/e_b96ac8adb9d4.png" media-type="image/png"/>
+<item id="e78" href="ecuaciones/e_bbf37e11295b.png" media-type="image/png"/>
+<item id="e79" href="ecuaciones/e_bd8fddd9b8d8.png" media-type="image/png"/>
+<item id="e80" href="ecuaciones/e_bdbb0a0f81d7.png" media-type="image/png"/>
+<item id="e81" href="ecuaciones/e_be638f89103e.png" media-type="image/png"/>
+<item id="e82" href="ecuaciones/e_bfc8c5e5f313.png" media-type="image/png"/>
+<item id="e83" href="ecuaciones/e_c05cf1da2feb.png" media-type="image/png"/>
+<item id="e84" href="ecuaciones/e_c0d5bbb77a79.png" media-type="image/png"/>
+<item id="e85" href="ecuaciones/e_c238c08b9858.png" media-type="image/png"/>
+<item id="e86" href="ecuaciones/e_c695486cc05a.png" media-type="image/png"/>
+<item id="e87" href="ecuaciones/e_c756a83aac25.png" media-type="image/png"/>
+<item id="e88" href="ecuaciones/e_c9f75b469200.png" media-type="image/png"/>
+<item id="e89" href="ecuaciones/e_ce19344bc332.png" media-type="image/png"/>
+<item id="e90" href="ecuaciones/e_d1d422a17d7b.png" media-type="image/png"/>
+<item id="e91" href="ecuaciones/e_d6c461c97d92.png" media-type="image/png"/>
+<item id="e92" href="ecuaciones/e_d7263676301e.png" media-type="image/png"/>
+<item id="e93" href="ecuaciones/e_d7bdc0e16a60.png" media-type="image/png"/>
+<item id="e94" href="ecuaciones/e_d801475c2eca.png" media-type="image/png"/>
+<item id="e95" href="ecuaciones/e_dcb6898454a9.png" media-type="image/png"/>
+<item id="e96" href="ecuaciones/e_dd4745f76d57.png" media-type="image/png"/>
+<item id="e97" href="ecuaciones/e_df0ea95e3689.png" media-type="image/png"/>
+<item id="e98" href="ecuaciones/e_e1f9d0d3e011.png" media-type="image/png"/>
+<item id="e99" href="ecuaciones/e_e2e192a8fb2e.png" media-type="image/png"/>
+<item id="e100" href="ecuaciones/e_e4fe615eb5cd.png" media-type="image/png"/>
+<item id="e101" href="ecuaciones/e_e66ce46da658.png" media-type="image/png"/>
+<item id="e102" href="ecuaciones/e_e938199098aa.png" media-type="image/png"/>
+<item id="e103" href="ecuaciones/e_eb1731f484dc.png" media-type="image/png"/>
+<item id="e104" href="ecuaciones/e_edc6809bbbd7.png" media-type="image/png"/>
+<item id="e105" href="ecuaciones/e_ee6f242c1838.png" media-type="image/png"/>
+<item id="e106" href="ecuaciones/e_f0f07b639d00.png" media-type="image/png"/>
+<item id="e107" href="ecuaciones/e_fbc1bace9644.png" media-type="image/png"/>
+<item id="e108" href="ecuaciones/e_fca270f6d5c9.png" media-type="image/png"/>
+</manifest>
+<spine toc="ncx">
+<itemref idref="portada"/>
+<itemref idref="nav"/>
+<itemref idref="c0"/>
+<itemref idref="c1"/>
+<itemref idref="c2"/>
+<itemref idref="c3"/>
+<itemref idref="c4"/>
+<itemref idref="c5"/>
+<itemref idref="c6"/>
+<itemref idref="c7"/>
+<itemref idref="c8"/>
+<itemref idref="c9"/>
+<itemref idref="c10"/>
+<itemref idref="c11"/>
+<itemref idref="c12"/>
+</spine>
+</package>
